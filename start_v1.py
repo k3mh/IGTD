@@ -66,21 +66,25 @@ target_name = "y"
 results_df = pd.DataFrame(columns=["dataset", "metric", "lib", "score", "score_list"])
 random_state = 19
 
-load_datasets = False
+load_datasets = True
 save_datasets = False
 
-load_explanations = False
+load_explanations = True
 save_explanations = False
 
-load_iter_evaluation = False
+load_iter_evaluation = True
 save_iter_evaluation = False
 
 load_final_result = True
 save_final_result = False
 
-generate_plots = True
+get_score = True
 
-unique_id = datetime.now().strftime("%d%b%Y_%Hh%Mm%Ss")
+generate_plots = False
+
+
+
+#unique_id = datetime.now().strftime("%d%b%Y_%Hh%Mm%Ss")
 unique_id = '13Apr2020_22h57m27s'
 
 parent_dir = "Dataset\\" + unique_id + "\\"
@@ -243,6 +247,9 @@ if not load_final_result:
             results_df = pd.concat([results_df, results_df_iter])
 else:
     results_df = pd.read_pickle(parent_dir + "evaluation_" + "all" + ".pkl")
+    temp_df = pd.read_csv(parent_dir + "model_performance.csv")
+    accuracy_lst = temp_df.accuracy.to_list()
+    auc_list = temp_df.auc.to_list()
 
 if save_final_result:
     results_df.to_pickle(parent_dir + "evaluation_" + "all" + ".pkl")
@@ -252,6 +259,18 @@ results_df_str = results_df.astype("str")
 if generate_plots:
     importlib.reload(Evaluation_plots)
     Evaluation_plots.plot_results(parent_dir)
+
+if get_score:
+    importlib.reload(Evaluation)
+
+    scaled_complexity = [0.37593985, 3.007518797, 6.015037594, 19.17293233, 3.007518797, 5.263157895, 6.015037594,
+                         7.518796992, 11.27819549, 6.015037594, 9.022556391, 10.52631579, 12.78195489]
+
+    score_lime_all   , score_lime_lst   = Evaluation.overall_score(results_df.loc[results_df.lib == 'lime'], scaled_complexity, accuracy_lst)
+    score_anchor_all , score_anchor_lst = Evaluation.overall_score(results_df.loc[results_df.lib == 'anchor'], scaled_complexity, accuracy_lst)
+
+
+
 
 # test 1 : FPR (1)
 # test 2 : FP + univariate (1,2)

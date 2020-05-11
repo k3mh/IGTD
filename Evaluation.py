@@ -93,6 +93,15 @@ def sensetivity(ds_meta, explanation, top_features=2):
     sens_all = np.sum(sens) / ds_meta.shape[0]
     return sens_all, sens
 
+def  overall_score (eval_all, ds_complexity, accu_list):
+    score_lst =[]
+    for iter, ds in enumerate(eval_all.dataset.unique()):
+        avg_score =  np.mean(eval_all.loc[(eval_all.dataset == ds) & (
+            eval_all.metric.isin(["percision", "FPR", "sensitivity"])), 'score'])
+        complexity = ds_complexity[iter]
+        accu = accu_list[iter]
+        score_lst.append(avg_score * complexity / accu)
 
-
+    total_scr = np.sum(score_lst)
+    return  (total_scr, score_lst)
 
