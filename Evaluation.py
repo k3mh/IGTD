@@ -1,7 +1,7 @@
 ### Evaluation
 import numpy as np
-def Precision(ds_meta, explanation, partial=False):
-    PERC = 0
+def Recall(ds_meta, explanation, partial=False):
+    RECL = 0
     tp = []
     length = 0
     try:
@@ -25,9 +25,9 @@ def Precision(ds_meta, explanation, partial=False):
         print(tp)
         print(len(tp))
         if len(tp) == 0 :
-            PERC = 0
+            RECL = 0
         else:
-            PERC = np.sum(tp) / len(tp)
+            RECL = np.sum(tp) / len(tp)
 
     else:
         for row in ds_meta.index.to_list():
@@ -40,9 +40,9 @@ def Precision(ds_meta, explanation, partial=False):
             tp.append(intersection /ex_vars_num)
 
             print(tp, length)
-        PERC = np.sum(tp) / len(tp)
+        RECL = np.sum(tp) / len(tp)
 
-    return PERC, tp
+    return RECL, tp
 
 def FPR(ds_meta, explanation, all_features):
     # FPR = FP/N
@@ -97,7 +97,7 @@ def  overall_score (eval_all, ds_complexity, accu_list):
     score_lst =[]
     for iter, ds in enumerate(eval_all.dataset.unique()):
         avg_score =  np.mean(eval_all.loc[(eval_all.dataset == ds) & (
-            eval_all.metric.isin(["percision", "FPR", "sensitivity"])), 'score'])
+            eval_all.metric.isin(["recall", "FPR", "sensitivity"])), 'score'])
         complexity = ds_complexity[iter]
         accu = accu_list[iter]
         score_lst.append(avg_score * complexity / accu)

@@ -232,19 +232,19 @@ for iter, fun_ in enumerate(funs):
     ########### evaluation
 
     #precision_lst1.append(Evaluation.Precision(meta_test, explaination_lime, True))
-    percision_,  percision_list = Evaluation.Precision(meta_test, explaination_lime, True)
+    percision_,  percision_list = Evaluation.Recall(meta_test, explaination_lime, True)
     results_df = pd.concat([results_df, pd.DataFrame({"dataset": [iter + 1], "metric" : ["percision_partial"], "lib": ["lime"], "score" : [percision_],  "score_list" : [percision_list]})])
 
     #precision_lst2.append(Evaluation.Precision(meta_test, explaination_anchor, True))
-    percision_, percision_list = Evaluation.Precision(meta_test, explaination_anchor, True)
+    percision_, percision_list = Evaluation.Recall(meta_test, explaination_anchor, True)
     results_df = pd.concat([results_df, pd.DataFrame({"dataset": [iter + 1], "metric" : ["percision_partial"], "lib": ["anchor"], "score" : [percision_],  "score_list" : [percision_list]})])
 
     #precision_lst1.append(Evaluation.Precision(meta_test, explaination_lime, False))
-    percision_,  percision_list = Evaluation.Precision(meta_test, explaination_lime, False)
+    percision_,  percision_list = Evaluation.Recall(meta_test, explaination_lime, False)
     results_df = pd.concat([results_df, pd.DataFrame({"dataset": [iter + 1], "metric" : ["percision"], "lib": ["lime"], "score" : [percision_],  "score_list" : [percision_list]})])
 
     #precision_lst2.append(Evaluation.Precision(meta_test, explaination_anchor, False))
-    percision_, percision_list = Evaluation.Precision(meta_test, explaination_anchor, False)
+    percision_, percision_list = Evaluation.Recall(meta_test, explaination_anchor, False)
     results_df = pd.concat([results_df, pd.DataFrame({"dataset": [iter + 1], "metric" : ["percision"], "lib": ["anchor"], "score" : [percision_],  "score_list" : [percision_list]})])
 
 

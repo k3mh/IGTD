@@ -57,7 +57,7 @@ def dataset_signals(count, dsts_lst, dsts_prop):
 
     return  generated_ds, metadata_df
 
-dataset_size= 1000
+dataset_size= 10000
 Dataframe_list = []
 accuracy_lst = []
 auc_list = []
@@ -66,26 +66,26 @@ target_name = "y"
 results_df = pd.DataFrame(columns=["dataset", "metric", "lib", "score", "score_list"])
 random_state = 19
 
-load_datasets = True
-save_datasets = False
+load_datasets = False
+save_datasets = True
 
-load_explanations = True
-save_explanations = False
+load_explanations = False
+save_explanations = True
 
-load_iter_evaluation = True
-save_iter_evaluation = False
+load_iter_evaluation = False
+save_iter_evaluation = True
 
-load_final_result = True
-save_final_result = False
+load_final_result = False
+save_final_result = True
 
 get_score = True
 
-generate_plots = False
+generate_plots = True
 
 
 
-#unique_id = datetime.now().strftime("%d%b%Y_%Hh%Mm%Ss")
-unique_id = '13Apr2020_22h57m27s'
+unique_id = datetime.now().strftime("%d%b%Y_%Hh%Mm%Ss")
+#unique_id = '13Apr2020_22h57m27s'
 
 parent_dir = "Dataset\\" + unique_id + "\\"
 Path(parent_dir).mkdir(parents=True, exist_ok=True)
@@ -190,29 +190,29 @@ if not load_final_result:
             results_df_iter =  pd.read_pickle(parent_dir + "evaluation_" + str(iter_) + ".pkl")
         else:
             # precision_lst1.append(Evaluation.Precision(meta_test, explaination_lime, True))
-            percision_, percision_list = Evaluation.Precision(meta_test, explaination_lime, True)
+            recall_, recall_list = Evaluation.Recall(meta_test, explaination_lime, True)
 
             results_df_iter = pd.concat([results_df_iter, pd.DataFrame(
-                {"dataset": [iter_ + 1], "metric": ["percision_partial"], "lib": ["lime"], "score": [percision_],
-                 "score_list": [percision_list], "RGS": [meta_test.RGS.to_list()] })])
+                {"dataset": [iter_ + 1], "metric": ["recall_partial"], "lib": ["lime"], "score": [recall_],
+                 "score_list": [recall_list], "RGS": [meta_test.RGS.to_list()] })])
 
             # precision_lst2.append(Evaluation.Precision(meta_test, explaination_anchor, True))
-            percision_, percision_list = Evaluation.Precision(meta_test, explaination_anchor, True)
+            recall_, recall_list = Evaluation.Recall(meta_test, explaination_anchor, True)
             results_df_iter = pd.concat([results_df_iter, pd.DataFrame(
-                {"dataset": [iter_ + 1], "metric": ["percision_partial"], "lib": ["anchor"], "score": [percision_],
-                 "score_list": [percision_list], "RGS": [meta_test.RGS.to_list()] })])
+                {"dataset": [iter_ + 1], "metric": ["recall_partial"], "lib": ["anchor"], "score": [recall_],
+                 "score_list": [recall_list], "RGS": [meta_test.RGS.to_list()] })])
 
             # precision_lst1.append(Evaluation.Precision(meta_test, explaination_lime, False))
-            percision_, percision_list = Evaluation.Precision(meta_test, explaination_lime, False)
+            recall_, recall_list = Evaluation.Recall(meta_test, explaination_lime, False)
             results_df_iter = pd.concat([results_df_iter, pd.DataFrame(
-                {"dataset": [iter_ + 1], "metric": ["percision"], "lib": ["lime"], "score": [percision_],
-                 "score_list": [percision_list], "RGS": [meta_test.RGS.to_list()] })])
+                {"dataset": [iter_ + 1], "metric": ["recall"], "lib": ["lime"], "score": [recall_],
+                 "score_list": [recall_list], "RGS": [meta_test.RGS.to_list()] })])
 
             # precision_lst2.append(Evaluation.Precision(meta_test, explaination_anchor, False))
-            percision_, percision_list = Evaluation.Precision(meta_test, explaination_anchor, False)
+            recall_, recall_list = Evaluation.Recall(meta_test, explaination_anchor, False)
             results_df_iter = pd.concat([results_df_iter, pd.DataFrame(
-                {"dataset": [iter_ + 1], "metric": ["percision"], "lib": ["anchor"], "score": [percision_],
-                 "score_list": [percision_list], "RGS": [meta_test.RGS.to_list()] })])
+                {"dataset": [iter_ + 1], "metric": ["recall"], "lib": ["anchor"], "score": [recall_],
+                 "score_list": [recall_list], "RGS": [meta_test.RGS.to_list()] })])
 
             # FPR all list
             # FPR_lst1.append(Evaluation.FPR(meta_test, explaination_lime, ds2.features_names))

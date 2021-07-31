@@ -25,7 +25,7 @@ def plot_results (parent_dir):
     results_dir  = parent_dir + '\\results'
     Path(results_dir).mkdir(parents=True, exist_ok=True)
 
-    context = ['percision_partial', 'percision', 'FPR', 'sensitivity']
+    context = ['recall_partial', 'recall', 'FPR', 'sensitivity']
 
     for con in context:
 
@@ -37,7 +37,8 @@ def plot_results (parent_dir):
         fig_dims = (12, 8)
         fig, ax = plt.subplots(figsize=fig_dims)
         #sns.boxplot(data=sub_results_df, x='dataset', y='score_list', hue= 'lib')
-        sns.violinplot(data=sub_results_df, x='dataset', y='score_list', hue='lib', inner='stick', split=True, scale_hue=True, cut=0, ax=ax)
+        sns.violinplot(data=sub_results_df, x='dataset', y='score_list', hue='lib', split=True, scale_hue=True, cut=0, ax=ax)
+        #sns.violinplot(data=sub_results_df, x='dataset', y='score_list', hue='lib', split=True, cut=0, ax=ax)
         #sns.swarmplot(data=sub_results_df, x='dataset', y='score_list', hue='lib', ax=ax)
 
         ax.set_title(con)
