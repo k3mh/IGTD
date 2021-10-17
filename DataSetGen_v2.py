@@ -7,10 +7,15 @@ from sklearn.preprocessing import minmax_scale
 
 
 class dataset:
+    features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12", "x13",  \
+                "x14", "x15", "x16", "x17", "x18", "x19", "x20", "x21", "x22", "x23", "x24", "x25", \
+                "x26", "x27", "x28"]
+
     def __init__(self):
         self.data = None
         self.meta_data = None
         self.features_names = None
+
 
     @staticmethod
     def __sigmoid__(self, x):
@@ -90,8 +95,9 @@ class dataset:
         #   All variables are strictly positive and continuous
 
         ## randon variables x, y, z and v creation
-        features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12", "x13"]
-
+        features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12", "x13", \
+                    "x14", "x15", "x16", "x17", "x18", "x19", "x20", "x21", "x22", "x23", "x24", "x25", \
+                    "x26", "x27", "x28", "x29"]
         data =  self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(features))
         df = pd.DataFrame(data, columns=features)
 
@@ -102,8 +108,8 @@ class dataset:
 
         df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=features)
         df = df.astype(float)
-        df = df.assign(y=df.x13.apply(lambda x: 1 if (x >= 0.5) else 0))
-        df = df.drop("x13", axis=1)
+        df = df.assign(y=df.x29.apply(lambda x: 1 if (x >= 0.5) else 0))
+        df = df.drop("x29", axis=1)
 
         self.meta_data = pd.DataFrame({"imp_vars": [[""]] * df.shape[0] , "RGS": ["RGS1"] * df.shape[0]})
         self.data = df
@@ -118,17 +124,18 @@ class dataset:
         #   All variables are stri5ctly positive and continuous
 
         ## randon variables x, y, z and v creation
-        features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
 
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(features))
-        df = pd.DataFrame(data, columns=features)
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
 
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=features)
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
         df = df.astype(float)
-        median_point = df.x12.median()
-        df = df.assign(y=df.x12.apply(lambda x: 1 if (x >= median_point) else 0))
+        df.x1 = df.x1 * 20
+        median_point = df.x1.median()
+        df = df.assign(y=df.x1.apply(lambda x: 1 if (x >= median_point) else 0))
         # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x12"]] * df.shape[0] , "RGS": ["RGS2"] * df.shape[0]})
+        self.meta_data = pd.DataFrame({"imp_vars": [["x1"]] * df.shape[0] , "RGS": ["RGS2"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
@@ -140,17 +147,18 @@ class dataset:
 
         #  Generate target correlated to two variable, target is true when both x3, x4 are above 0.5. x3, and x4 are not correlated.
         #  All variables are strictly positive and continuous
-        features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
 
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(features))
-        df = pd.DataFrame(data, columns=features)
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
 
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=features)
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
         df = df.astype(float)
-        mid_point = (df.x11 + df.x12).median()
-        df = df.assign(y=df[["x11", "x12"]].apply(lambda x: 1 if ((x[0] + x[1]) >= mid_point) else 0, axis=1))
+        df[["x2", "x3"]] = df[["x2", "x3"]] * 20
+        mid_point = (df.x2 + df.x3).median()
+        df = df.assign(y=df[["x2", "x3"]].apply(lambda x: 1 if ((x[0] + x[1]) >= mid_point) else 0, axis=1))
         # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x12", "x11"]] * df.shape[0] , "RGS": ["RGS3"] * df.shape[0]})
+        self.meta_data = pd.DataFrame({"imp_vars": [["x2", "x3"]] * df.shape[0] , "RGS": ["RGS3"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
@@ -162,18 +170,19 @@ class dataset:
         #   Generate target correlated to two variable, target is true when both (x2^2 + 2*x3 + x4) >= 0.5.
         #   All variables are strictly positive and continuous
 
-        features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
 
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(features))
-        df = pd.DataFrame(data, columns=features)
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
 
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=features)
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
         df = df.astype(float)
-        mid_point = df[["x2", "x3", "x4"]].apply(lambda x: (np.power(x[0], 2) + (2 * x[1]) + x[2])).median()
+        df[["x4", "x5", "x6"]] = df[["x4", "x5", "x6"]] * 20
+        mid_point = df[["x4", "x5", "x6"]].apply(lambda x: (np.power(x[0], 2) + (2 * x[1]) + x[2])).median()
         df = df.assign(
-            y=df[["x2", "x3", "x4"]].apply(lambda x: 1 if (((np.power(x[0], 2) + (2 * x[1]) + x[2])) >= mid_point) else 0, axis=1))
+            y=df[["x4", "x5", "x6"]].apply(lambda x: 1 if (((np.power(x[0], 2) + (2 * x[1]) + x[2])) >= mid_point) else 0, axis=1))
         # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x2", "x3", "x4"]] * df.shape[0], "RGS": ["RGS4"] * df.shape[0]})
+        self.meta_data = pd.DataFrame({"imp_vars": [["x4", "x5", "x6"]] * df.shape[0], "RGS": ["RGS4"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
@@ -184,18 +193,19 @@ class dataset:
     def generate_ds5(self, size=10000):
         #   Generate target correlated to two variable, target is true when  x5 = 1  .
         #   All variables are strictly positive and continuous except x5 is categorical
-        features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
 
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(features))
-        df = pd.DataFrame(data, columns=features)
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
 
-        df["x5"] = np.random.choice(2, size)
+        df["x7"] = np.random.choice([1, 2], size)
 
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=features)
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
         df = df.astype(float)
-        df = df.assign(y=df[["x5"]].apply(lambda x: 1 if (x[0] == 1) else 0, axis=1))
+        df.x7 = df.x7 * 20
+        df = df.assign(y=df[["x7"]].apply(lambda x: 1 if (x[0] == 1) else 0, axis=1))
         # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [[ "x5"]] * df.shape[0] , "RGS": ["RGS5"] * df.shape[0]})
+        self.meta_data = pd.DataFrame({"imp_vars": [[ "x7"]] * df.shape[0] , "RGS": ["RGS5"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
@@ -205,19 +215,21 @@ class dataset:
     def generate_ds6(self, size=10000):
         #   Generate target correlated to two variable, target is true when both x4, x5 are above 0.5 and = 1 respectively .
         #   All variables are strictly positive and continuous except x5 is categorical
-        features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
 
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(features))
-        df = pd.DataFrame(data, columns=features)
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
 
-        df["x5"] = np.random.choice(2, size)
+        df["x9"] = np.random.choice([1, 2], size)
 
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=features)
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
         df = df.astype(float)
-        mid_point = df[["x4", "x5"]].apply(lambda x: (x[0]  + x[1] )  , axis=1).median()
-        df = df.assign(y=df[["x4", "x5"]].apply(lambda x: 1 if (x[0]  + x[1] ) > mid_point else 0, axis=1))
+        df[["x8", "x9"]] = df[["x8", "x9"]] * 20
+
+        mid_point = df[["x8", "x8"]].apply(lambda x: (x[0]  + x[1] )  , axis=1).median()
+        df = df.assign(y=df[["x8", "x9"]].apply(lambda x: 1 if (x[0]  + x[1] ) > mid_point else 0, axis=1))
         # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x4", "x5"]] * df.shape[0] , "RGS": ["RGS6"] * df.shape[0]})
+        self.meta_data = pd.DataFrame({"imp_vars": [["x8", "x9"]] * df.shape[0] , "RGS": ["RGS6"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
@@ -227,20 +239,22 @@ class dataset:
     def generate_ds7(self, size=10000):
         #   Generate target correlated to two variable, target is true when both x4, x5 are above 0.5 and = 1 respectively .
         #   All variables are strictly positive and continuous except x5 is categorical
-        features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
 
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(features))
-        df = pd.DataFrame(data, columns=features)
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
 
-        df["x5"] = np.random.choice(2, size)
+        df["x11"] = np.random.choice([1, 2], size)
 
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=features)
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
 
-        mid_point = (df.x4 * df.x5).median()
+        mid_point = (df.x10 * df.x11).median()
         df = df.astype(float)
-        df = df.assign(y=df[["x4", "x5"]].apply(lambda x: 1 if (x[0]  * x[1] ) > mid_point else 0, axis=1))
+        df[["x10", "x11"]] = df[["x10", "x11"]] * 20
+
+        df = df.assign(y=df[["x10", "x11"]].apply(lambda x: 1 if (x[0]  * x[1] ) > mid_point else 0, axis=1))
         # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x4", "x5"]] * df.shape[0] , "RGS": ["RGS7"] * df.shape[0]})
+        self.meta_data = pd.DataFrame({"imp_vars": [["x10", "x11"]] * df.shape[0] , "RGS": ["RGS7"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
@@ -250,20 +264,21 @@ class dataset:
     def generate_ds8(self, size=10000):
         #   Generate target correlated to two variable, target is true when both 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
         #   All variables are strictly positive and continuous except x5 is categorical
-        features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
 
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(features))
-        df = pd.DataFrame(data, columns=features)
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
 
-        df["x5"] = np.random.choice(2, size)
+        df["x14"] = np.random.choice([1, 2], size)
 
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=features)
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
         df = df.astype(float)
-        midpoint = df[["x3", "x4", "x5"]].apply(      lambda x:       (  (5 * x[0])  + x[1] ) * ( x[2] ) , axis=1).median()
-        df = df.assign(y=df[["x3", "x4", "x5"]].apply(lambda x: 1 if ( ( (5 * x[0])  + x[1] ) * ( x[2] ) > midpoint )else 0, axis=1))
+        df[["x12", "x13", "x14"]] = df[["x12", "x13", "x14"]] * 20
+        midpoint = df[["x12", "x13", "x14"]].apply(      lambda x:       (  (5 * x[0])  + x[1] ) * ( x[2] ) , axis=1).median()
+        df = df.assign(y=df[["x12", "x13", "x14"]].apply(lambda x: 1 if ( ( (5 * x[0])  + x[1] ) * ( x[2] ) > midpoint )else 0, axis=1))
         # df = df.assign(y=df[["x3", "x4", "x5"]].apply(lambda x: 1 if ( 5 * x[0] > 0.5 or (x[1] >= 0.5 and x[2] == 1) )else 0, axis=1))
         # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x3", "x4", "x5"]] * df.shape[0] , "RGS": ["RGS8"] * df.shape[0]})
+        self.meta_data = pd.DataFrame({"imp_vars": [["x12", "x13", "x14"]] * df.shape[0] , "RGS": ["RGS8"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
@@ -273,19 +288,21 @@ class dataset:
     def generate_ds9(self, size=10000):
         #   Generate target correlated to two variable, target is true when both  x2^2 or 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
         #   All variables are strictly positive and continuous except x5 is categorical
-        features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
 
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(features))
-        df = pd.DataFrame(data, columns=features)
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
 
-        df["x5"] = np.random.choice(2, size)
+        df["x18"] = np.random.choice([1, 2], size)
 
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=features)
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
         df = df.astype(float)
-        mid_point = df[["x2", "x3", "x4", "x5"]].apply(lambda x:  (5 * x[0]) + (2 * x[1]) + (x[2] * x[3]), axis=1).median()
-        df = df.assign(y=df[["x2", "x3", "x4", "x5"]].apply(lambda x: 1 if (( (5 * x[0]) + (2 * x[1]) + (x[2] * x[3]) ) > mid_point )else 0, axis=1))
+
+        df[["x15", "x16", "x17", "x18"]] = df[["x15", "x16", "x17", "x18"]] * 20
+        mid_point = df[["x15", "x16", "x17", "x18"]].apply(lambda x:  (5 * x[0]) + (2 * x[1]) + (x[2] * x[3]), axis=1).median()
+        df = df.assign(y=df[["x15", "x16", "x17", "x18"]].apply(lambda x: 1 if (( (5 * x[0]) + (2 * x[1]) + (x[2] * x[3]) ) > mid_point )else 0, axis=1))
         # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x2", "x3", "x4", "x5"]] * df.shape[0] , "RGS": ["RGS9"] * df.shape[0]})
+        self.meta_data = pd.DataFrame({"imp_vars": [["x15", "x16", "x17", "x18"]] * df.shape[0] , "RGS": ["RGS9"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
@@ -295,19 +312,20 @@ class dataset:
     def generate_ds10(self, size=10000):
         #   Generate target correlated to two variable, target is true when both  x2^2 or 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
         #   All variables are strictly positive and continuous except x5 is categorical
-        features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
 
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(features))
-        df = pd.DataFrame(data, columns=features)
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
 
-        df["x5"] = np.random.choice(2, size)
+        df["x23"] = np.random.choice([1, 2], size)
 
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=features)
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
         df = df.astype(float)
-        mid_point = df[["x1", "x2", "x3", "x4", "x5"]].apply(lambda x: ((5*x[0]) + (3*x[1]) +  (2*x[2]) + (x[3] * x[4] )) , axis=1).median()
-        df = df.assign(y=df[["x1", "x2", "x3", "x4", "x5"]].apply(lambda x: 1 if ( ((5*x[0]) + (3*x[1]) +  (2*x[2]) + (x[3] * x[4] ) > mid_point))  else 0, axis=1))
+        df[["x19", "x20", "x21", "x22", "x23"]] = df[["x19", "x20", "x21", "x22", "x23"]] * 20
+        mid_point = df[["x19", "x20", "x21", "x22", "x23"]].apply(lambda x: ((5*x[0]) + (3*x[1]) +  (2*x[2]) + (x[3] * x[4] )) , axis=1).median()
+        df = df.assign(y=df[["x19", "x20", "x21", "x22", "x23"]].apply(lambda x: 1 if ( ((5*x[0]) + (3*x[1]) +  (2*x[2]) + (x[3] * x[4] ) > mid_point))  else 0, axis=1))
         # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x1", "x2", "x3", "x4", "x5"]] * df.shape[0] , "RGS": ["RGS10"] * df.shape[0]})
+        self.meta_data = pd.DataFrame({"imp_vars": [["x19", "x20", "x21", "x22", "x23"]] * df.shape[0] , "RGS": ["RGS10"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
@@ -317,19 +335,20 @@ class dataset:
     def generate_ds11(self, size=10000):
         #   Generate target correlated to two variable, target is true when both  x2^2 or 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
         #   All variables are strictly positive and continuous except x5 is categorical
-        features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
 
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(features))
-        df = pd.DataFrame(data, columns=features)
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
 
         #df["x5"] = np.random.choice(2, size)
 
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=features)
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
         df = df.astype(float)
-        mid_point = df[["x1", "x2", "x3", "x4", "x5"]].apply(lambda x: (5 * x[0] ) + (4* x[1] ) + (3 * x[2]) + (2*x[3] ) + x[4] , axis=1).median()
-        df = df.assign(y=df[["x1", "x2", "x3", "x4", "x5"]].apply(lambda x: 1 if (5 * x[0] ) + (4* x[1] ) + (3 * x[2]) + (2*x[3] ) + x[4] > mid_point else 0, axis=1))
+        df[["x24", "x25", "x26", "x27", "x28"]] =  df[["x24", "x25", "x26", "x27", "x28"]]  * 20
+        mid_point = df[["x24", "x25", "x26", "x27", "x28"]].apply(lambda x: (5 * x[0] ) + (4* x[1] ) + (3 * x[2]) + (2*x[3] ) + x[4] , axis=1).median()
+        df = df.assign(y=df[["x24", "x25", "x26", "x27", "x28"]].apply(lambda x: 1 if (5 * x[0] ) + (4* x[1] ) + (3 * x[2]) + (2*x[3] ) + x[4] > mid_point else 0, axis=1))
         # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x1", "x2", "x3", "x4", "x5"]] * df.shape[0] , "RGS": ["RGS11"] * df.shape[0]})
+        self.meta_data = pd.DataFrame({"imp_vars": [["x24", "x25", "x26", "x27", "x28"]] * df.shape[0] , "RGS": ["RGS11"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
