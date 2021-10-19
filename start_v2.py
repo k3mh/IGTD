@@ -7,6 +7,7 @@ import matplotlib
 #matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import pandas as pd
+from itertools import combinations
 import importlib
 import DataSetGen_v2 as dg
 import Evaluation
@@ -15,7 +16,10 @@ import Evaluation_plots
 import numpy as np
 import os.path
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
+from xgboost import XGBClassifier
+
+
 from sklearn.metrics import accuracy_score, roc_auc_score
 import lime.lime_tabular
 from anchor import anchor_tabular
@@ -61,21 +65,21 @@ dataset_size= 10000
 Dataframe_list = []
 accuracy_lst = []
 auc_list = []
-features_names = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+features_names = dg.dataset.features
 target_name = "y"
 results_df = pd.DataFrame(columns=["dataset", "metric", "lib", "score", "score_list"])
 random_state = 19
 
 load_datasets = False
-save_datasets = True
+save_datasets = False
 
 skip_explanations = True
 load_explanations = False
-save_explanations = True
+save_explanations = False
 
 skip_iter_evaluation =True
 load_iter_evaluation = False
-save_iter_evaluation = True
+save_iter_evaluation = False
 
 load_final_result = False
 save_final_result = False
@@ -94,6 +98,7 @@ Path(parent_dir).mkdir(parents=True, exist_ok=True)
 
 if not load_final_result:
     datasets_seq_lst = [
+
                          # [0],
                          # [1],
                          # [2],
@@ -107,15 +112,20 @@ if not load_final_result:
                          # [10],
 
                          # [0],
-                         [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2],
-                         [1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3],
-                         [1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4],
-                         [1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5],
-                         [1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6],
-                         [1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7],
-                         [1, 8, 1, 8, 1, 8, 1, 8, 1, 8, 1, 8],
-                         [1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9],
-                         [1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10],
+                         #   [1, 4, 5, 6],
+                           # [9, 10, 9, 10],
+                           # [9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10],
+                         # [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2],
+                         # [1, 3, 1, 3, 1, 3, 1, 3, 1, 3, 1, 3],
+                         # [1, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 4],
+                         # [1, 5, 1, 5, 1, 5, 1, 5, 1, 5, 1, 5],
+                         # [1, 6, 1, 6, 1, 6, 1, 6, 1, 6, 1, 6],
+                         # [1, 7, 1, 7, 1, 7, 1, 7, 1, 7, 1, 7],
+                         # [1, 8, 1, 8, 1, 8, 1, 8, 1, 8, 1, 8],
+                         # [1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9],
+                         # [1, 10, 1, 10, 1, 10, 1, 10, 1, 10, 1, 10],
+
+
                          # [1, 2, 4, 1, 2, 4, 1, 2, 4, 1, 2, 4],
                          # [1, 2, 4, 5, 1, 2, 4, 5, 1, 2, 4, 5],
                          # [1, 2, 3, 4, 6, 1, 2, 4, 5, 6, 1, 2, 4, 5],
@@ -137,6 +147,18 @@ if not load_final_result:
                          # [1, 9, 1, 9, 1, 9, 1, 9, 1, 9],
                          # [1, 10, 1, 10, 1, 10, 1, 10, 1, 10]
      ]
+    # datasets_seq_lst = list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 2))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 4))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 6))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 7))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 8))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 9))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 10))
+
+
+
     datasets_prop_lst = []
 
     data_lst_filename = parent_dir +  "datasets_seq_lst_" + str(dataset_size) + ".txt"
@@ -152,6 +174,7 @@ if not load_final_result:
 
 
     for iter_ in  range(len(datasets_seq_lst)):
+        print("Dataset :{} out of {}".format(iter_, len(datasets_seq_lst)))
         dsts_lst = datasets_seq_lst[iter_]
         dsts_prop = datasets_prop_lst[iter_]
         precision_lst1 = []
@@ -185,6 +208,8 @@ if not load_final_result:
 
         ## Training
         rf = RandomForestClassifier()
+        # rf = ExtraTreesClassifier()
+        # rf = XGBClassifier()
         rf.fit(train, labels_train)
         accuracy_lst.append(accuracy_score(labels_test, rf.predict(test)))
         auc_list.append(roc_auc_score(labels_test, rf.predict_proba(test)[:, 1]))

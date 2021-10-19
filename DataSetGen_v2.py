@@ -198,12 +198,12 @@ class dataset:
         data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
         df = pd.DataFrame(data, columns=dataset.features)
 
-        df["x7"] = np.random.choice([1, 2], size)
-
         df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
+        df["x7"] = np.random.choice([1, 2], size)
         df = df.astype(float)
         df.x7 = df.x7 * 20
-        df = df.assign(y=df[["x7"]].apply(lambda x: 1 if (x[0] == 1) else 0, axis=1))
+        mid_point =  df.x7.mean()
+        df = df.assign(y=df[["x7"]].apply(lambda x: 1 if (x[0] > mid_point) else 0, axis=1))
         # print(df.corr())
         self.meta_data = pd.DataFrame({"imp_vars": [[ "x7"]] * df.shape[0] , "RGS": ["RGS5"] * df.shape[0]})
         self.data = df
@@ -244,13 +244,12 @@ class dataset:
         data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
         df = pd.DataFrame(data, columns=dataset.features)
 
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
         df["x11"] = np.random.choice([1, 2], size)
 
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
-
-        mid_point = (df.x10 * df.x11).median()
         df = df.astype(float)
         df[["x10", "x11"]] = df[["x10", "x11"]] * 20
+        mid_point = (df.x10 * df.x11).mean()
 
         df = df.assign(y=df[["x10", "x11"]].apply(lambda x: 1 if (x[0]  * x[1] ) > mid_point else 0, axis=1))
         # print(df.corr())
@@ -269,13 +268,15 @@ class dataset:
         data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
         df = pd.DataFrame(data, columns=dataset.features)
 
-        df["x14"] = np.random.choice([1, 2], size)
 
         df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
+
+        df["x14"] = np.random.choice([1, 2], size)
+
         df = df.astype(float)
         df[["x12", "x13", "x14"]] = df[["x12", "x13", "x14"]] * 20
         midpoint = df[["x12", "x13", "x14"]].apply(      lambda x:       (  (5 * x[0])  + x[1] ) * ( x[2] ) , axis=1).median()
-        df = df.assign(y=df[["x12", "x13", "x14"]].apply(lambda x: 1 if ( ( (5 * x[0])  + x[1] ) * ( x[2] ) > midpoint )else 0, axis=1))
+        df = df.assign(y=df[["x12", "x13", "x14"]].apply(lambda x: 1 if ( ( (5 * x[0])  + x[1] ) * ( x[2] ) >= midpoint )else 0, axis=1))
         # df = df.assign(y=df[["x3", "x4", "x5"]].apply(lambda x: 1 if ( 5 * x[0] > 0.5 or (x[1] >= 0.5 and x[2] == 1) )else 0, axis=1))
         # print(df.corr())
         self.meta_data = pd.DataFrame({"imp_vars": [["x12", "x13", "x14"]] * df.shape[0] , "RGS": ["RGS8"] * df.shape[0]})
@@ -341,12 +342,14 @@ class dataset:
         df = pd.DataFrame(data, columns=dataset.features)
 
         #df["x5"] = np.random.choice(2, size)
-
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
         df = df.astype(float)
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
+
         df[["x24", "x25", "x26", "x27", "x28"]] =  df[["x24", "x25", "x26", "x27", "x28"]]  * 20
-        mid_point = df[["x24", "x25", "x26", "x27", "x28"]].apply(lambda x: (5 * x[0] ) + (4* x[1] ) + (3 * x[2]) + (2*x[3] ) + x[4] , axis=1).median()
-        df = df.assign(y=df[["x24", "x25", "x26", "x27", "x28"]].apply(lambda x: 1 if (5 * x[0] ) + (4* x[1] ) + (3 * x[2]) + (2*x[3] ) + x[4] > mid_point else 0, axis=1))
+        mid_point =      df[["x24", "x25", "x26", "x27", "x28"]].apply(lambda x:      (20*x[0]) + (10*x[1]) + (5*x[2]) + (2*x[3]) + x[4], axis=1).median()
+        df = df.assign(y=df[["x24", "x25", "x26", "x27", "x28"]].apply(lambda x: 1 if (20*x[0]) + (10*x[1]) + (5*x[2]) + (2*x[3]) + x[4] > mid_point else 0, axis=1))
+
+
         # print(df.corr())
         self.meta_data = pd.DataFrame({"imp_vars": [["x24", "x25", "x26", "x27", "x28"]] * df.shape[0] , "RGS": ["RGS11"] * df.shape[0]})
         self.data = df
@@ -357,8 +360,3 @@ class dataset:
 
     def get_data(self):
         return self.data
-
-
-
-
-
