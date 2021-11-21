@@ -17,7 +17,7 @@ import numpy as np
 import os.path
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
-from xgboost import XGBClassifier
+# from xgboost import XGBClassifier
 
 
 from sklearn.metrics import accuracy_score, roc_auc_score
@@ -100,19 +100,19 @@ if not load_final_result:
     datasets_seq_lst = [
 
                          # [0],
-                         # [1],
-                         # [2],
-                         # [3],
-                         # [4],
-                         # [5],
-                         # [6],
-                         # [7],
+                         [1],
+                         [2],
+                         [3],
+                         [4],
+                         [5],
+                         [6],
+                         [7],
                          # [8],
                          # [9],
                          # [10],
 
                          # [0],
-                         #   [1, 4, 5, 6],
+                          [1, 2, 3, 4, 5, 6, 7],
                            # [9, 10, 9, 10],
                            # [9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10],
                          # [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2],
@@ -149,13 +149,13 @@ if not load_final_result:
      ]
     # datasets_seq_lst = list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 2))
     # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 4))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 6))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 7))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 8))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 9))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 10))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 4))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 6))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 7))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 8))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 9))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 10))
 
 
 
