@@ -48,7 +48,7 @@ fig.show()
 
 
 """ make blobs example """
-from sklearn.datasets import make
+from sklearn.datasets import make_blobs
 temp_arr  = make_blobs( n_samples=1000, n_features=2, centers=6)
 temp_pd = pd.DataFrame({"x1": temp_arr[0].transpose()[0],\
                         "x2": temp_arr[0].transpose()[1], \

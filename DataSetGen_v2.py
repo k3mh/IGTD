@@ -4,7 +4,7 @@ import numpy as np
 #import seaborn as sns
 import pandas as pd
 from sklearn.preprocessing import minmax_scale
-from sklearn.datasets import make_gaussian_quantiles, make_hastie_10_2, make_classification
+from sklearn.datasets import make_gaussian_quantiles, make_hastie_10_2, make_classification, make_friedman1, make_friedman2, make_friedman3
 
 class dataset:
     features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12", "x13",  \
@@ -338,8 +338,125 @@ class dataset:
         self.features_names = features_names
         return self
 
+    def generate_ds8(self, size=10000):
+        #   Generate target correlated to two variable, target is true when both 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
+        #   All variables are strictly positive and continuous except x5 is categorical
+        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
 
 
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
+
+        df = df.astype(float)
+        temp_arr = make_friedman1(n_features=5, n_samples=size)
+        temp_pd = pd.DataFrame({"x1": temp_arr[0].transpose()[0], \
+                                "x2": temp_arr[0].transpose()[1], \
+                                "x3": temp_arr[0].transpose()[2], \
+                                "x4": temp_arr[0].transpose()[3], \
+                                "x5": temp_arr[0].transpose()[4], \
+                                "y_reg": temp_arr[1]})
+
+        med_point = temp_pd.y_reg.median()
+
+        temp_pd = temp_pd.assign(y=temp_pd[["y_reg"]].apply(lambda x: 1 if (x[0] > med_point) else 0, axis=1))
+
+        df.x18 = temp_pd.x1
+        df.x19 = temp_pd.x2
+        df.x20 = temp_pd.x3
+        df.x21 = temp_pd.x4
+        df.x22 = temp_pd.x5
+
+        df = df.assign(y=temp_pd.y)
+
+        # df = df.assign(y=df[["x3", "x4", "x5"]].apply(lambda x: 1 if ( 5 * x[0] > 0.5 or (x[1] >= 0.5 and x[2] == 1) )else 0, axis=1))
+        # print(df.corr())
+        self.meta_data = pd.DataFrame({"imp_vars": [["x18", "x19", "x20", "x21", "x22"]] * df.shape[0] , "RGS": ["RGS8"] * df.shape[0]})
+        self.data = df
+        features_names = df.columns.to_list()
+        features_names.remove('y')
+        self.features_names = features_names
+        return self
+
+
+    def generate_ds9(self, size=10000):
+        #   Generate target correlated to two variable, target is true when both 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
+        #   All variables are strictly positive and continuous except x5 is categorical
+        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
+
+
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
+
+        df = df.astype(float)
+        temp_arr = make_friedman2( n_samples=size)
+        temp_pd = pd.DataFrame({"x1": temp_arr[0].transpose()[0], \
+                                "x2": temp_arr[0].transpose()[1], \
+                                "x3": temp_arr[0].transpose()[2], \
+                                "x4": temp_arr[0].transpose()[3], \
+                                "y_reg": temp_arr[1]})
+
+        med_point = temp_pd.y_reg.median()
+
+        temp_pd = temp_pd.assign(y=temp_pd[["y_reg"]].apply(lambda x: 1 if (x[0] > med_point) else 0, axis=1))
+
+        df.x23 = temp_pd.x1
+        df.x24 = temp_pd.x2
+        df.x25 = temp_pd.x3
+        df.x26 = temp_pd.x4
+
+        df = df.assign(y=temp_pd.y)
+
+        # df = df.assign(y=df[["x3", "x4", "x5"]].apply(lambda x: 1 if ( 5 * x[0] > 0.5 or (x[1] >= 0.5 and x[2] == 1) )else 0, axis=1))
+        # print(df.corr())
+        self.meta_data = pd.DataFrame({"imp_vars": [["x18", "x19", "x20", "x21", "x22"]] * df.shape[0] , "RGS": ["RGS8"] * df.shape[0]})
+        self.data = df
+        features_names = df.columns.to_list()
+        features_names.remove('y')
+        self.features_names = features_names
+        return self
+
+    def generate_ds10(self, size=10000):
+        #   Generate target correlated to two variable, target is true when both 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
+        #   All variables are strictly positive and continuous except x5 is categorical
+        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
+
+
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
+
+        df = df.astype(float)
+        temp_arr = make_friedman3(n_samples=size)
+        temp_pd = pd.DataFrame({"x1": temp_arr[0].transpose()[0], \
+                                "x2": temp_arr[0].transpose()[1], \
+                                "x3": temp_arr[0].transpose()[2], \
+                                "x4": temp_arr[0].transpose()[3], \
+                                "y_reg": temp_arr[1]})
+
+        med_point = temp_pd.y_reg.median()
+
+        temp_pd = temp_pd.assign(y=temp_pd[["y_reg"]].apply(lambda x: 1 if (x[0] > med_point) else 0, axis=1))
+
+        df.x23 = temp_pd.x1
+        df.x24 = temp_pd.x2
+        df.x25 = temp_pd.x3
+        df.x26 = temp_pd.x4
+
+        df = df.assign(y=temp_pd.y)
+
+        # df = df.assign(y=df[["x3", "x4", "x5"]].apply(lambda x: 1 if ( 5 * x[0] > 0.5 or (x[1] >= 0.5 and x[2] == 1) )else 0, axis=1))
+        # print(df.corr())
+        self.meta_data = pd.DataFrame({"imp_vars": [["x18", "x19", "x20", "x21", "x22"]] * df.shape[0] , "RGS": ["RGS8"] * df.shape[0]})
+        self.data = df
+        features_names = df.columns.to_list()
+        features_names.remove('y')
+        self.features_names = features_names
+        return self
 
     # def generate_ds5(self, size=10000):
     #     #   Generate target correlated to two variable, target is true when  x5 = 1  .
@@ -411,78 +528,81 @@ class dataset:
     #     self.features_names = features_names
     #     return self
 
-    def generate_ds8(self, size=10000):
-        #   Generate target correlated to two variable, target is true when both 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
-        #   All variables are strictly positive and continuous except x5 is categorical
-        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
-
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
-        df = pd.DataFrame(data, columns=dataset.features)
 
 
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
 
-        df["x14"] = np.random.choice([1, 2], size)
+    # def generate_ds8(self, size=10000):
+    #     #   Generate target correlated to two variable, target is true when both 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
+    #     #   All variables are strictly positive and continuous except x5 is categorical
+    #     # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+    #
+    #     data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+    #     df = pd.DataFrame(data, columns=dataset.features)
+    #
+    #
+    #     df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
+    #
+    #     df["x14"] = np.random.choice([1, 2], size)
+    #
+    #     df = df.astype(float)
+    #     df[["x12", "x13", "x14"]] = df[["x12", "x13", "x14"]] * 20
+    #     midpoint = df[["x12", "x13", "x14"]].apply(      lambda x:       (  (5 * x[0])  + x[1] ) * ( x[2] ) , axis=1).median()
+    #     df = df.assign(y=df[["x12", "x13", "x14"]].apply(lambda x: 1 if ( ( (5 * x[0])  + x[1] ) * ( x[2] ) >= midpoint )else 0, axis=1))
+    #     # df = df.assign(y=df[["x3", "x4", "x5"]].apply(lambda x: 1 if ( 5 * x[0] > 0.5 or (x[1] >= 0.5 and x[2] == 1) )else 0, axis=1))
+    #     # print(df.corr())
+    #     self.meta_data = pd.DataFrame({"imp_vars": [["x12", "x13", "x14"]] * df.shape[0] , "RGS": ["RGS8"] * df.shape[0]})
+    #     self.data = df
+    #     features_names = df.columns.to_list()
+    #     features_names.remove('y')
+    #     self.features_names = features_names
+    #     return self
 
-        df = df.astype(float)
-        df[["x12", "x13", "x14"]] = df[["x12", "x13", "x14"]] * 20
-        midpoint = df[["x12", "x13", "x14"]].apply(      lambda x:       (  (5 * x[0])  + x[1] ) * ( x[2] ) , axis=1).median()
-        df = df.assign(y=df[["x12", "x13", "x14"]].apply(lambda x: 1 if ( ( (5 * x[0])  + x[1] ) * ( x[2] ) >= midpoint )else 0, axis=1))
-        # df = df.assign(y=df[["x3", "x4", "x5"]].apply(lambda x: 1 if ( 5 * x[0] > 0.5 or (x[1] >= 0.5 and x[2] == 1) )else 0, axis=1))
-        # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x12", "x13", "x14"]] * df.shape[0] , "RGS": ["RGS8"] * df.shape[0]})
-        self.data = df
-        features_names = df.columns.to_list()
-        features_names.remove('y')
-        self.features_names = features_names
-        return self
+    # def generate_ds9(self, size=10000):
+    #     #   Generate target correlated to two variable, target is true when both  x2^2 or 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
+    #     #   All variables are strictly positive and continuous except x5 is categorical
+    #     # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+    #
+    #     data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+    #     df = pd.DataFrame(data, columns=dataset.features)
+    #
+    #     df["x18"] = np.random.choice([1, 2], size)
+    #
+    #     df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
+    #     df = df.astype(float)
+    #
+    #     df[["x15", "x16", "x17", "x18"]] = df[["x15", "x16", "x17", "x18"]] * 20
+    #     mid_point = df[["x15", "x16", "x17", "x18"]].apply(lambda x:  (5 * x[0]) + (2 * x[1]) + (x[2] * x[3]), axis=1).median()
+    #     df = df.assign(y=df[["x15", "x16", "x17", "x18"]].apply(lambda x: 1 if (( (5 * x[0]) + (2 * x[1]) + (x[2] * x[3]) ) > mid_point )else 0, axis=1))
+    #     # print(df.corr())
+    #     self.meta_data = pd.DataFrame({"imp_vars": [["x15", "x16", "x17", "x18"]] * df.shape[0] , "RGS": ["RGS9"] * df.shape[0]})
+    #     self.data = df
+    #     features_names = df.columns.to_list()
+    #     features_names.remove('y')
+    #     self.features_names = features_names
+    #     return self
 
-    def generate_ds9(self, size=10000):
-        #   Generate target correlated to two variable, target is true when both  x2^2 or 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
-        #   All variables are strictly positive and continuous except x5 is categorical
-        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
-
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
-        df = pd.DataFrame(data, columns=dataset.features)
-
-        df["x18"] = np.random.choice([1, 2], size)
-
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
-        df = df.astype(float)
-
-        df[["x15", "x16", "x17", "x18"]] = df[["x15", "x16", "x17", "x18"]] * 20
-        mid_point = df[["x15", "x16", "x17", "x18"]].apply(lambda x:  (5 * x[0]) + (2 * x[1]) + (x[2] * x[3]), axis=1).median()
-        df = df.assign(y=df[["x15", "x16", "x17", "x18"]].apply(lambda x: 1 if (( (5 * x[0]) + (2 * x[1]) + (x[2] * x[3]) ) > mid_point )else 0, axis=1))
-        # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x15", "x16", "x17", "x18"]] * df.shape[0] , "RGS": ["RGS9"] * df.shape[0]})
-        self.data = df
-        features_names = df.columns.to_list()
-        features_names.remove('y')
-        self.features_names = features_names
-        return self
-
-    def generate_ds10(self, size=10000):
-        #   Generate target correlated to two variable, target is true when both  x2^2 or 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
-        #   All variables are strictly positive and continuous except x5 is categorical
-        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
-
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
-        df = pd.DataFrame(data, columns=dataset.features)
-
-        df["x23"] = np.random.choice([1, 2], size)
-
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
-        df = df.astype(float)
-        df[["x19", "x20", "x21", "x22", "x23"]] = df[["x19", "x20", "x21", "x22", "x23"]] * 20
-        mid_point = df[["x19", "x20", "x21", "x22", "x23"]].apply(lambda x: ((5*x[0]) + (3*x[1]) +  (2*x[2]) + (x[3] * x[4] )) , axis=1).median()
-        df = df.assign(y=df[["x19", "x20", "x21", "x22", "x23"]].apply(lambda x: 1 if ( ((5*x[0]) + (3*x[1]) +  (2*x[2]) + (x[3] * x[4] ) > mid_point))  else 0, axis=1))
-        # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x19", "x20", "x21", "x22", "x23"]] * df.shape[0] , "RGS": ["RGS10"] * df.shape[0]})
-        self.data = df
-        features_names = df.columns.to_list()
-        features_names.remove('y')
-        self.features_names = features_names
-        return self
+    # def generate_ds10(self, size=10000):
+    #     #   Generate target correlated to two variable, target is true when both  x2^2 or 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
+    #     #   All variables are strictly positive and continuous except x5 is categorical
+    #     # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+    #
+    #     data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+    #     df = pd.DataFrame(data, columns=dataset.features)
+    #
+    #     df["x23"] = np.random.choice([1, 2], size)
+    #
+    #     df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
+    #     df = df.astype(float)
+    #     df[["x19", "x20", "x21", "x22", "x23"]] = df[["x19", "x20", "x21", "x22", "x23"]] * 20
+    #     mid_point = df[["x19", "x20", "x21", "x22", "x23"]].apply(lambda x: ((5*x[0]) + (3*x[1]) +  (2*x[2]) + (x[3] * x[4] )) , axis=1).median()
+    #     df = df.assign(y=df[["x19", "x20", "x21", "x22", "x23"]].apply(lambda x: 1 if ( ((5*x[0]) + (3*x[1]) +  (2*x[2]) + (x[3] * x[4] ) > mid_point))  else 0, axis=1))
+    #     # print(df.corr())
+    #     self.meta_data = pd.DataFrame({"imp_vars": [["x19", "x20", "x21", "x22", "x23"]] * df.shape[0] , "RGS": ["RGS10"] * df.shape[0]})
+    #     self.data = df
+    #     features_names = df.columns.to_list()
+    #     features_names.remove('y')
+    #     self.features_names = features_names
+    #     return self
 
     def generate_ds11(self, size=10000):
         #   Generate target correlated to two variable, target is true when both  x2^2 or 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
