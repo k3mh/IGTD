@@ -4,12 +4,13 @@ import numpy as np
 #import seaborn as sns
 import pandas as pd
 from sklearn.preprocessing import minmax_scale
-from sklearn.datasets import make_gaussian_quantiles, make_hastie_10_2, make_classification, make_friedman1, make_friedman2, make_friedman3
+from sklearn.datasets import make_gaussian_quantiles, make_hastie_10_2, make_classification, make_friedman1,\
+    make_friedman2, make_friedman3, make_blobs
 
 class dataset:
     features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12", "x13",  \
                 "x14", "x15", "x16", "x17", "x18", "x19", "x20", "x21", "x22", "x23", "x24", "x25", \
-                "x26", "x27", "x28"]
+                "x26", "x27", "x28", "x29", "x30", "x31", "x32", "x33", "x34", "x35", "x36", "x37"]
 
     def __init__(self):
         self.data = None
@@ -301,44 +302,9 @@ class dataset:
         self.features_names = features_names
         return self
 
+
+
     def generate_ds7(self, size=10000):
-        """
-        Based on sklearn.datasets.make_hastie_10_2 function. Based on 10 features.
-        Generates data for binary classification used in Hastie et al. 2009, Example 10.2.
-        The ten features are standard independent Gaussian and the target y is defined by:
-        y[i] = 1 if np.sum(X[i] ** 2) > 9.34 else -1
-        """
-
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
-        df = pd.DataFrame(data, columns=dataset.features)
-
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
-
-        temp_arr = make_classification(n_samples=size, n_features=4, n_informative=4, n_redundant=0, n_repeated=0 , hypercube=False, class_sep=5)
-        temp_pd = pd.DataFrame({"x1": temp_arr[0].transpose()[0], \
-                                "x2": temp_arr[0].transpose()[1], \
-                                "x3": temp_arr[0].transpose()[2], \
-                                "x4": temp_arr[0].transpose()[3], \
-
-                                "y": temp_arr[1]})
-
-        df.x14 = temp_pd.x1
-        df.x15 = temp_pd.x2
-        df.x16 = temp_pd.x3
-        df.x17 = temp_pd.x4
-
-        df = df.assign(y=temp_pd.y)
-        df.y.where(df.y == 1, 0, inplace=True)
-
-        self.meta_data = pd.DataFrame(
-            {"imp_vars": [["x9", "x10", "x11", "x12", "x13"]] * df.shape[0], "RGS": ["RGS5"] * df.shape[0]})
-        self.data = df
-        features_names = df.columns.to_list()
-        features_names.remove('y')
-        self.features_names = features_names
-        return self
-
-    def generate_ds8(self, size=10000):
         #   Generate target correlated to two variable, target is true when both 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
         #   All variables are strictly positive and continuous except x5 is categorical
         # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
@@ -380,7 +346,7 @@ class dataset:
         return self
 
 
-    def generate_ds9(self, size=10000):
+    def generate_ds8(self, size=10000):
         #   Generate target correlated to two variable, target is true when both 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
         #   All variables are strictly positive and continuous except x5 is categorical
         # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
@@ -412,14 +378,14 @@ class dataset:
 
         # df = df.assign(y=df[["x3", "x4", "x5"]].apply(lambda x: 1 if ( 5 * x[0] > 0.5 or (x[1] >= 0.5 and x[2] == 1) )else 0, axis=1))
         # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x18", "x19", "x20", "x21", "x22"]] * df.shape[0] , "RGS": ["RGS8"] * df.shape[0]})
+        self.meta_data = pd.DataFrame({"imp_vars": [["x23", "x24", "x25", "x26"]] * df.shape[0] , "RGS": ["RGS8"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
         self.features_names = features_names
         return self
 
-    def generate_ds10(self, size=10000):
+    def generate_ds9(self, size=10000):
         #   Generate target correlated to two variable, target is true when both 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
         #   All variables are strictly positive and continuous except x5 is categorical
         # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
@@ -442,16 +408,106 @@ class dataset:
 
         temp_pd = temp_pd.assign(y=temp_pd[["y_reg"]].apply(lambda x: 1 if (x[0] > med_point) else 0, axis=1))
 
-        df.x23 = temp_pd.x1
-        df.x24 = temp_pd.x2
-        df.x25 = temp_pd.x3
-        df.x26 = temp_pd.x4
+        df.x27 = temp_pd.x1
+        df.x28 = temp_pd.x2
+        df.x29 = temp_pd.x3
+        df.x30 = temp_pd.x4
 
         df = df.assign(y=temp_pd.y)
 
         # df = df.assign(y=df[["x3", "x4", "x5"]].apply(lambda x: 1 if ( 5 * x[0] > 0.5 or (x[1] >= 0.5 and x[2] == 1) )else 0, axis=1))
         # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x18", "x19", "x20", "x21", "x22"]] * df.shape[0] , "RGS": ["RGS8"] * df.shape[0]})
+        self.meta_data = pd.DataFrame({"imp_vars": [["x27", "x28", "x29", "x30"]] * df.shape[0] , "RGS": ["RGS8"] * df.shape[0]})
+        self.data = df
+        features_names = df.columns.to_list()
+        features_names.remove('y')
+        self.features_names = features_names
+        return self
+
+    def generate_ds10(self, size=10000):
+        """
+        Based on sklearn.datasets.make_classification. Based on 4 features.
+        This initially creates clusters of points normally distributed (std=1) about vertices of an
+        n_informative-dimensional hypercube with sides of length 2*class_sep and assigns an equal
+        number of clusters to each class. It introduces interdependence between these features and
+        adds various types of further noise to the data.
+
+        Without shuffling, X horizontally stacks features in the following order: the primary n_informative features,
+         followed by n_redundant linear combinations of the informative features, followed by n_repeated duplicates,
+          drawn randomly with replacement from the informative and redundant features. The remaining features are
+          filled with random noise. Thus, without shuffling, all useful features are contained in the
+          columns X[:, :n_informative + n_redundant + n_repeated].
+        """
+
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
+
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
+
+        temp_arr = make_classification(n_samples=size, n_features=4, n_informative=4, n_redundant=0, n_repeated=0,
+                                       hypercube=False, class_sep=5, random_state=100)
+        temp_pd = pd.DataFrame({"x1": temp_arr[0].transpose()[0], \
+                                "x2": temp_arr[0].transpose()[1], \
+                                "x3": temp_arr[0].transpose()[2], \
+                                "x4": temp_arr[0].transpose()[3], \
+                                "y": temp_arr[1]})
+
+        df.x14 = temp_pd.x1
+        df.x15 = temp_pd.x2
+        df.x16 = temp_pd.x3
+        df.x17 = temp_pd.x4
+
+        df = df.assign(y=temp_pd.y)
+        df.y.where(df.y == 1, 0, inplace=True)
+
+        self.meta_data = pd.DataFrame(
+            {"imp_vars": [["x14", "x15", "x16", "x17"]] * df.shape[0], "RGS": ["RGS5"] * df.shape[0]})
+        self.data = df
+        features_names = df.columns.to_list()
+        features_names.remove('y')
+        self.features_names = features_names
+        return self
+
+    def generate_ds11(self, size=10000):
+        """
+        Based on sklearn.datasets.make_classification. Based on 4 features.
+        This initially creates clusters of points normally distributed (std=1) about vertices of an
+        n_informative-dimensional hypercube with sides of length 2*class_sep and assigns an equal
+        number of clusters to each class. It introduces interdependence between these features and
+        adds various types of further noise to the data.
+
+        Without shuffling, X horizontally stacks features in the following order: the primary n_informative features,
+         followed by n_redundant linear combinations of the informative features, followed by n_repeated duplicates,
+          drawn randomly with replacement from the informative and redundant features. The remaining features are
+          filled with random noise. Thus, without shuffling, all useful features are contained in the
+          columns X[:, :n_informative + n_redundant + n_repeated].
+        """
+
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
+
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
+
+        temp_arr = make_blobs(n_samples=size,  n_features=6, centers=2, cluster_std=8, random_state=100)
+        temp_pd = pd.DataFrame({"x1": temp_arr[0].transpose()[0], \
+                                "x2": temp_arr[0].transpose()[1], \
+                                "x3": temp_arr[0].transpose()[2], \
+                                "x4": temp_arr[0].transpose()[3], \
+                                "x5": temp_arr[0].transpose()[4], \
+                                "x6": temp_arr[0].transpose()[5], \
+                                "y": temp_arr[1]})
+
+        df.x31 = temp_pd.x1
+        df.x32 = temp_pd.x2
+        df.x33 = temp_pd.x3
+        df.x34 = temp_pd.x4
+        df.x35 = temp_pd.x5
+        df.x36 = temp_pd.x6
+        df = df.assign(y=temp_pd.y)
+        # df.y.where(df.y == 1, 0, inplace=True)
+
+        self.meta_data = pd.DataFrame(
+            {"imp_vars": [["x31", "x32", "x33", "x34"]] * df.shape[0], "RGS": ["RGS5"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
@@ -604,30 +660,30 @@ class dataset:
     #     self.features_names = features_names
     #     return self
 
-    def generate_ds11(self, size=10000):
-        #   Generate target correlated to two variable, target is true when both  x2^2 or 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
-        #   All variables are strictly positive and continuous except x5 is categorical
-        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
-
-        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
-        df = pd.DataFrame(data, columns=dataset.features)
-
-        #df["x5"] = np.random.choice(2, size)
-        df = df.astype(float)
-        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
-
-        df[["x24", "x25", "x26", "x27", "x28"]] =  df[["x24", "x25", "x26", "x27", "x28"]]  * 20
-        mid_point =      df[["x24", "x25", "x26", "x27", "x28"]].apply(lambda x:      (20*x[0]) + (10*x[1]) + (5*x[2]) + (2*x[3]) + x[4], axis=1).median()
-        df = df.assign(y=df[["x24", "x25", "x26", "x27", "x28"]].apply(lambda x: 1 if (20*x[0]) + (10*x[1]) + (5*x[2]) + (2*x[3]) + x[4] > mid_point else 0, axis=1))
-
-
-        # print(df.corr())
-        self.meta_data = pd.DataFrame({"imp_vars": [["x24", "x25", "x26", "x27", "x28"]] * df.shape[0] , "RGS": ["RGS11"] * df.shape[0]})
-        self.data = df
-        features_names = df.columns.to_list()
-        features_names.remove('y')
-        self.features_names = features_names
-        return self
+    # def generate_ds11(self, size=10000):
+    #     #   Generate target correlated to two variable, target is true when both  x2^2 or 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
+    #     #   All variables are strictly positive and continuous except x5 is categorical
+    #     # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+    #
+    #     data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+    #     df = pd.DataFrame(data, columns=dataset.features)
+    #
+    #     #df["x5"] = np.random.choice(2, size)
+    #     df = df.astype(float)
+    #     df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
+    #
+    #     df[["x24", "x25", "x26", "x27", "x28"]] =  df[["x24", "x25", "x26", "x27", "x28"]]  * 20
+    #     mid_point =      df[["x24", "x25", "x26", "x27", "x28"]].apply(lambda x:      (20*x[0]) + (10*x[1]) + (5*x[2]) + (2*x[3]) + x[4], axis=1).median()
+    #     df = df.assign(y=df[["x24", "x25", "x26", "x27", "x28"]].apply(lambda x: 1 if (20*x[0]) + (10*x[1]) + (5*x[2]) + (2*x[3]) + x[4] > mid_point else 0, axis=1))
+    #
+    #
+    #     # print(df.corr())
+    #     self.meta_data = pd.DataFrame({"imp_vars": [["x24", "x25", "x26", "x27", "x28"]] * df.shape[0] , "RGS": ["RGS11"] * df.shape[0]})
+    #     self.data = df
+    #     features_names = df.columns.to_list()
+    #     features_names.remove('y')
+    #     self.features_names = features_names
+    #     return self
 
     def get_data(self):
         return self.data
