@@ -109,10 +109,10 @@ if not load_final_result:
                          # [7],
                          # [8],
                          # [9],
-                         [10],
-                         [11],
+                         # [10],
+                         # [11],
                          # [0],
-                         #  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                         # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                            # [9, 10, 9, 10],
                            # [9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10, 9, 10],
                          # [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2],
@@ -147,15 +147,15 @@ if not load_final_result:
                          # [1, 9, 1, 9, 1, 9, 1, 9, 1, 9],
                          # [1, 10, 1, 10, 1, 10, 1, 10, 1, 10]
      ]
-    # datasets_seq_lst = list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 2))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 4))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 6))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 7))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 8))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 9))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 10))
+    datasets_seq_lst = list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 2))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 3))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 4))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 6))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 7))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 8))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 9))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 10))
 
 
 
@@ -213,7 +213,7 @@ if not load_final_result:
         rf.fit(train, labels_train)
         accuracy_lst.append(accuracy_score(labels_test, rf.predict(test)))
         auc_list.append(roc_auc_score(labels_test, rf.predict_proba(test)[:, 1]))
-        print("accuracy_list", np.round(auc_list, 4))
+        print("accuracy_list", np.round(accuracy_lst, 4))
         print("auc_list     ", np.round(auc_list, 4))
 
         ########## explanations

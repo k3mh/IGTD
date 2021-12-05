@@ -3,6 +3,9 @@ from sklearn.datasets import make_gaussian_quantiles, make_hastie_10_2, make_cla
 import matplotlib.pyplot as plt
 import plotly.express as px
 import pandas as pd
+import importlib
+
+importlib.reload(px)
 
 
 """Madelon rule example"""
@@ -67,3 +70,16 @@ fig.update_layout(
 fig.show()
 
 """ end of make blobs"""
+
+""""dataset accuracy plot : start"""
+fig = px.line(x=range(1, len(accuracy_lst)+1), y=accuracy_lst, markers=True, range_x= range(1, len(accuracy_lst)+2))
+fig.update_layout(
+    title={
+        # 'text': "Datasets performance based on individual rules.",
+        'y':0.95,
+        'x':0.5,
+        'xanchor': 'center',
+        'yanchor': 'top'})
+fig.show()
+""""dataset accuracy plot : end """
+
