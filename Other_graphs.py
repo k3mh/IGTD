@@ -100,3 +100,46 @@ fig.data[0].update(selectedpoints=selected_inds, selected=dict(marker=dict(color
 fig.show()
 
 
+####################### OPS surface function #############
+import numpy as np
+import plotly.graph_objects as go
+import pandas as pd
+
+def z_func(cov, com):
+    z=np.sqrt(np.power(100-cov,2) + np.power(com, 2)) -1
+    return z
+
+OPS=[]
+coverage = []
+complexity = []
+cov = np.linspace(0, 100, 30)
+comp = np.linspace(1, 100, 30)
+
+coverage, complexity = np.meshgrid(cov, comp)
+OPS = z_func(coverage, complexity)
+
+
+# Read data from a csv
+# z_data = pd.DataFrame({"OPS": OPS, "Complexity":complexity, "Coverage":coverage}, index=range(len(OPS)))
+
+fig = go.Figure(data=[go.Surface(x=coverage, y=complexity, z=OPS)])
+
+fig.update_layout(title='OPS Function Surface', autosize=False,
+                  width=800, height=800,
+                  margin=dict(l=65, r=50, b=65, t=90),
+                  scene=dict(
+                      xaxis_title='Coverage',
+                      yaxis_title='Complexity',
+                      zaxis_title='OPS',
+                  ),
+                  )
+
+fig.show()
+
+
+
+
+
+
+
+
