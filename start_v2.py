@@ -128,16 +128,16 @@ if not load_final_result:
 
     # selected based on 10s percentiles
     datasets_seq_lst = [[1, 3],
-    # [1, 6, 11],
-    # [1, 2, 6, 9, 11],
-    # [1, 2, 3, 5, 6, 8, 9, 11],
-    # [3, 4, 6, 8],
-    # [1, 3, 6, 7, 8, 9, 11],
-    # [2, 3, 4, 5, 6, 9, 11],
-    # [1, 6, 7, 9, 10, 11],
-    # [2, 3, 4, 7, 10, 11],
-    # [2, 3, 5, 6, 7, 8, 9, 10],
-    # [5, 6, 7]
+    [1, 6, 11],
+    [1, 2, 6, 9, 11],
+    [1, 2, 3, 5, 6, 8, 9, 11],
+    [3, 4, 6, 8],
+    [1, 3, 6, 7, 8, 9, 11],
+    [2, 3, 4, 5, 6, 9, 11],
+    [1, 6, 7, 9, 10, 11],
+    [2, 3, 4, 7, 10, 11],
+    [2, 3, 5, 6, 7, 8, 9, 10],
+    [5, 6, 7]
                         ]
 
 
@@ -233,7 +233,7 @@ if not load_final_result:
                 end = time.time()
                 print("time elapsed")
                 print(end - start)
-                break
+
                 #explaination_anchor.to_pickle(anchor_explanation_file)
 
             if save_explanations:
