@@ -60,7 +60,7 @@ def get_exp_lime_paralell(data, explainer, feature_names,  model, num_feature=2,
     def inner_exp(data_, model, num_feature, top_labels, i_):
 
         e_ = explainer.explain_instance(data_, model.predict_proba, num_features=num_feature, top_labels=top_labels)
-        print("i", i_)
+        # print("i", i_)
         return e_, i_
 
 
@@ -101,7 +101,7 @@ def get_exp_anchor_parallel(data, explainer, precision=.95, model=None):
     def inner_exp(data_, model_,  i_):
         e_ = explainer.explain_instance(data_.values, model_.predict, threshold=precision)
 
-        print("i", i_)
+        # print("i", i_)
         return e_, i_
 
     exp_lst = Parallel(n_jobs=10)(delayed(inner_exp)(data.loc[i], model,  i) for i in data.index.to_list())

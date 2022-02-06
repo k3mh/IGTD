@@ -211,7 +211,7 @@ if not load_final_result:
                                                                         class_names=target_name, discretize_continuous=True)
                 start = time.time()
                 # explaination_lime = Explaination.get_exp_lime(test, lime_explainer, features_names, rf)
-                # explaination_lime = Explaination.get_exp_lime_paralell(test, lime_explainer, features_names, rf)
+                explaination_lime = Explaination.get_exp_lime_paralell(test, lime_explainer, features_names, rf)
 
                 end = time.time()
                 print("time elapsed")
