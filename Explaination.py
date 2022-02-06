@@ -2,6 +2,7 @@ from __future__ import print_function
 import importlib
 import DataSetGen
 import Evaluation
+import asyncio
 importlib.reload(DataSetGen)
 importlib.reload(Evaluation)
 
@@ -21,40 +22,62 @@ import collections
 from numba import njit, prange
 import numba
 
+import asyncio
+from joblib import Parallel, delayed
+import time
+import multiprocessing
 
+
+
+def background(f):
+    def wrapped(*args, **kwargs):
+        return asyncio.get_event_loop().run_in_executor(None, f, *args, **kwargs)
+
+    return wrapped
 
 
 #@numba.jit(parallel=True)
+# @background
 def get_exp_lime(data, explainer, feature_names,  model, num_feature=2, top_labels=1):
+    num_feature=len(feature_names)
 
     explaination_df = pd.DataFrame(columns=["explainer_lib", "instance", "features", "importance"])
     explainer_lib = "lime"
     for count, i in enumerate(data.index.to_list()):
         print(count, i)
         exp = explainer.explain_instance(data.loc[i], model.predict_proba, num_features=num_feature, top_labels=top_labels)
+        print(exp.as_map().items())
         for exp_list in exp.as_map().items():
             explaination_df =  explaination_df.append(pd.DataFrame({"explainer_lib": [explainer_lib], "instance": [i], "features": [[feature_names[item[0]] for item in exp_list[1]]], "importance":  [[item[1] for item in exp_list[1]]] }))
 
     return explaination_df
 
-def get_exp_lime_parallel(data, explainer, feature_names,  model, num_feature=2, top_labels=1):
-
+def get_exp_lime_paralell(data, explainer, feature_names,  model, num_feature=2, top_labels=1):
+    num_feature=len(feature_names)
     explaination_df = pd.DataFrame(columns=["explainer_lib", "instance", "features", "importance"])
     explainer_lib = "lime"
 
+    def inner_exp(data_, model, num_feature, top_labels, i_):
 
-    for count, i in enumerate(data.index.to_list()):
-        print(count, i)
-        exp = explainer.explain_instance(data.loc[i], model.predict_proba, num_features=num_feature, top_labels=top_labels)
+        e_ = explainer.explain_instance(data_, model.predict_proba, num_features=num_feature, top_labels=top_labels)
+        print("i", i_)
+        return e_, i_
+
+
+    exp_lst = Parallel(n_jobs=10)(delayed(inner_exp)(data.loc[i], model, num_feature, top_labels, i) for i in data.index.to_list())
+
+    for exp, i in exp_lst:
         for exp_list in exp.as_map().items():
             explaination_df =  explaination_df.append(pd.DataFrame({"explainer_lib": [explainer_lib], "instance": [i], "features": [[feature_names[item[0]] for item in exp_list[1]]], "importance":  [[item[1] for item in exp_list[1]]] }))
 
     return explaination_df
+
 
 
 
 # Anchor explainer
 
+# @background
 def get_exp_anchor(data, explainer, precision=.95, model=None):
 
     explainer_lib = "anchor"
@@ -68,5 +91,29 @@ def get_exp_anchor(data, explainer, precision=.95, model=None):
         explaination_df = explaination_df.append(pd.DataFrame(
             {"explainer_lib": [explainer_lib], "instance": [i], "features": [vars],
              "importance": [list(range(1, len(vars) + 1)) ] }))
+    return  explaination_df
+
+
+def get_exp_anchor_parallel(data, explainer, precision=.95, model=None):
+    explaination_df = pd.DataFrame(columns=["explainer_lib", "instance", "features", "importance"])
+    explainer_lib = "anchor"
+
+    def inner_exp(data_, model_,  i_):
+        e_ = explainer.explain_instance(data_.values, model_.predict, threshold=precision)
+
+        print("i", i_)
+        return e_, i_
+
+    exp_lst = Parallel(n_jobs=10)(delayed(inner_exp)(data.loc[i], model,  i) for i in data.index.to_list())
+
+
+    for exp, i in exp_lst:
+        vars = list(map((lambda x: x.split()[0]), exp.names()))
+        print(exp.names(), vars)
+        explaination_df = explaination_df.append(pd.DataFrame(
+            {"explainer_lib": [explainer_lib], "instance": [i], "features": [vars],
+             "importance": [list(range(1, len(vars) + 1))]}))
+
+
     return  explaination_df
 

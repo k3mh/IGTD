@@ -18,7 +18,7 @@ import os.path
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
 # from xgboost import XGBClassifier
-
+import time
 
 from sklearn.metrics import accuracy_score, roc_auc_score
 import lime.lime_tabular
@@ -38,8 +38,8 @@ import numba
 
 ###### for all datasets
 def dataset_signals(count, dsts_lst, dsts_prop):
-    assert np.sum(dsts_prop) <= 1
-    assert len(dsts_prop) == len(dsts_lst)
+    assert np.sum(dsts_prop) <= 1  # make sure proportions percentages are sum to 1 or less  .
+    assert len(dsts_prop) == len(dsts_lst)  # make sure that percentages are the same number as the datasets.
 
     ds = dg.dataset()
     funs = ds.get_gen_fn_list()
@@ -47,7 +47,7 @@ def dataset_signals(count, dsts_lst, dsts_prop):
     metadata_df = pd.DataFrame()
 
     for iter_, dataset_index in enumerate(dsts_lst):
-        print(iter_)
+
         func_= funs[dataset_index]
         prop_size = int(dsts_prop[iter_] * count)
 
@@ -97,6 +97,7 @@ parent_dir = "Dataset\\" + unique_id + "\\"
 Path(parent_dir).mkdir(parents=True, exist_ok=True)
 
 if not load_final_result:
+
     datasets_seq_lst = [
 
                          # [0],
@@ -127,16 +128,17 @@ if not load_final_result:
 
     # selected based on 10s percentiles
     datasets_seq_lst = [[1, 3],
-    [1, 6, 11],
-    [1, 2, 6, 9, 11],
-    [1, 2, 3, 5, 6, 8, 9, 11],
-    [3, 4, 6, 8],
-    [1, 3, 6, 7, 8, 9, 11],
-    [2, 3, 4, 5, 6, 9, 11],
-    [1, 6, 7, 9, 10, 11],
-    [2, 3, 4, 7, 10, 11],
-    [2, 3, 5, 6, 7, 8, 9, 10],
-    [5, 6, 7]]
+    # [1, 6, 11],
+    # [1, 2, 6, 9, 11],
+    # [1, 2, 3, 5, 6, 8, 9, 11],
+    # [3, 4, 6, 8],
+    # [1, 3, 6, 7, 8, 9, 11],
+    # [2, 3, 4, 5, 6, 9, 11],
+    # [1, 6, 7, 9, 10, 11],
+    # [2, 3, 4, 7, 10, 11],
+    # [2, 3, 5, 6, 7, 8, 9, 10],
+    # [5, 6, 7]
+                        ]
 
 
 
@@ -207,8 +209,15 @@ if not load_final_result:
             else:
                 lime_explainer = lime.lime_tabular.LimeTabularExplainer(train.values, feature_names=features_names,
                                                                         class_names=target_name, discretize_continuous=True)
+                start = time.time()
+                # explaination_lime = Explaination.get_exp_lime(test, lime_explainer, features_names, rf)
+                # explaination_lime = Explaination.get_exp_lime_paralell(test, lime_explainer, features_names, rf)
 
-                explaination_lime = Explaination.get_exp_lime(test, lime_explainer, features_names, rf)
+                end = time.time()
+                print("time elapsed")
+                print(end - start)
+
+
                 #explaination_lime.to_pickle(lime_explanation_file)
 
                 # Anchor explainer
@@ -216,7 +225,15 @@ if not load_final_result:
                                                                        data=train, categorical_names={})
                 anch_explainer.fit(train.values, labels_train, test.values, labels_test)
                 predict_fn = lambda x: rf.predict(anch_explainer.encoder.transform(x))
-                explaination_anchor = Explaination.get_exp_anchor(test, anch_explainer, 0.8, rf)
+
+                start = time.time()
+                explaination_anchor = Explaination.get_exp_anchor_parallel(test, anch_explainer, 0.8, rf)
+                # explaination_anchor = Explaination.get_exp_anchor(test, anch_explainer, 0.8, rf)
+
+                end = time.time()
+                print("time elapsed")
+                print(end - start)
+                break
                 #explaination_anchor.to_pickle(anchor_explanation_file)
 
             if save_explanations:
@@ -303,8 +320,7 @@ if generate_plots:
 if get_score:
     importlib.reload(Evaluation)
 
-    scaled_complexity = [0.37593985, 3.007518797, 6.015037594, 19.17293233, 3.007518797, 5.263157895, 6.015037594,
-                         7.518796992, 11.27819549, 6.015037594, 9.022556391, 10.52631579, 12.78195489]
+    scaled_complexity = [x for x  in range(1,12)]
 
     score_lime_all   , score_lime_lst   = Evaluation.overall_score(results_df.loc[results_df.lib == 'lime'], scaled_complexity, accuracy_lst)
     score_anchor_all , score_anchor_lst = Evaluation.overall_score(results_df.loc[results_df.lib == 'anchor'], scaled_complexity, accuracy_lst)
