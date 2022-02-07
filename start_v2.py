@@ -61,7 +61,7 @@ def dataset_signals(count, dsts_lst, dsts_prop):
 
     return  generated_ds, metadata_df
 
-dataset_size= 100
+dataset_size= 5000
 Dataframe_list = []
 accuracy_lst = []
 auc_list = []
