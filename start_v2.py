@@ -61,7 +61,7 @@ def dataset_signals(count, dsts_lst, dsts_prop):
 
     return  generated_ds, metadata_df
 
-dataset_size= 5000
+dataset_size= 200
 Dataframe_list = []
 accuracy_lst = []
 auc_list = []
@@ -214,24 +214,33 @@ if not load_final_result:
                 explaination_lime = Explaination.get_exp_lime_paralell(test, lime_explainer, features_names, rf)
 
                 end = time.time()
-                print("time elapsed")
+                print("Lime time elapsed")
                 print(end - start)
-
-
                 #explaination_lime.to_pickle(lime_explanation_file)
 
+
+
                 # Anchor explainer
-                anch_explainer = anchor_tabular.AnchorTabularExplainer(class_names=target_name, feature_names=features_names,
-                                                                       data=train, categorical_names={})
-                anch_explainer.fit(train.values, labels_train, test.values, labels_test)
-                predict_fn = lambda x: rf.predict(anch_explainer.encoder.transform(x))
+
+                # Note: old, anchor_explainer preparation, not sure if working
+                # anch_explainer = anchor_tabular.AnchorTabularExplainer(class_names=target_name, feature_names=features_names,
+                #                                                        data=train, categorical_names={})
+
+                # anch_explainer.fit(train.values, labels_train, test.values, labels_test)
+                # predict_fn = lambda x: rf.predict(anch_explainer.encoder.transform(x))
+                # Note end
+
+
+                anch_explainer = anchor_tabular.AnchorTabularExplainer(class_names=labels_test.unique(),
+                                                                       feature_names=features_names, train_data=train.values)
+
 
                 start = time.time()
                 explaination_anchor = Explaination.get_exp_anchor_parallel(test, anch_explainer, 0.8, rf)
                 # explaination_anchor = Explaination.get_exp_anchor(test, anch_explainer, 0.8, rf)
 
                 end = time.time()
-                print("time elapsed")
+                print("Anchor time elapsed")
                 print(end - start)
 
                 #explaination_anchor.to_pickle(anchor_explanation_file)
