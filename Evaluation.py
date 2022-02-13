@@ -45,10 +45,8 @@ def Recall(ds_meta, explanation, partial=False):
     return RECL, tp
 
 def FPR(ds_meta, explanation, all_features):
-    # FPR = FP/N
-    FPR = 0
-    FP = []
-    length = 0
+    # FPR = fp/N
+    FPR = []
     try:
         if ds_meta.shape[0] != explanation.shape[0]:
             raise ValueError
@@ -59,9 +57,20 @@ def FPR(ds_meta, explanation, all_features):
 
         #length += len(ds_meta.loc[row, "imp_vars"])
         fp = len(set(explanation.set_index("instance").loc[row, "features"]).difference(set(ds_meta.loc[row, "imp_vars"])))
-        tn     = len(set(all_features).difference(set(explanation.set_index("instance").loc[row, "features"])))
-        neg = tn + fp
-        FP.append(fp / neg)
+        # tn     = len(set(all_features).difference(set(explanation.set_index("instance").loc[row, "features"])))
+        # neg = tn + fp
+        ground_truth_neg = len(set(all_features).difference(set(ds_meta.loc[row, "imp_vars"])))
+
+
+        FPR.append(fp/ ground_truth_neg)
+
+        print("fp")
+        print(fp)
+        print("ground_truth_neg")
+        print(ground_truth_neg)
+        print("FPR")
+        print(FPR)
+
 
         # print("row=", row)
         # print(ds_meta.loc[row, "imp_vars"], explanation.set_index("instance").loc[row, "features"])
@@ -69,9 +78,9 @@ def FPR(ds_meta, explanation, all_features):
         # print(FP)
         # print('---------------')
 
-    FPR = np.sum(FP) / len(FP)
+    avg_FPR = np.sum(FPR) / len(FPR)
 
-    return FPR, FP
+    return avg_FPR, FPR
 
 
 def sensetivity(ds_meta, explanation, top_features=2):

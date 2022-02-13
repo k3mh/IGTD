@@ -52,19 +52,19 @@ def get_exp_lime(data, explainer, feature_names,  model, num_feature=2, top_labe
 
     return explaination_df
 
-def get_exp_lime_paralell(data, explainer, feature_names,  model, num_feature=2, top_labels=1):
+def get_exp_lime_paralell(data, explainer, feature_names,  model, num_feature=2, top_labels=1, feature_selection_ = "auto"):
     num_feature=len(feature_names)
     explaination_df = pd.DataFrame(columns=["explainer_lib", "instance", "features", "importance"])
     explainer_lib = "lime"
 
     def inner_exp(data_, model, num_feature, top_labels, i_):
 
-        e_ = explainer.explain_instance(data_, model.predict_proba, num_features=num_feature, top_labels=top_labels)
+        e_ = explainer.explain_instance(data_, model.predict_proba,  top_labels=top_labels)
         # print("i", i_)
         return e_, i_
 
 
-    exp_lst = Parallel(n_jobs=10)(delayed(inner_exp)(data.loc[i], model, num_feature, top_labels, i) for i in data.index.to_list())
+    exp_lst = Parallel(n_jobs=7, max_nbytes=None)(delayed(inner_exp)(data.loc[i], model, num_feature, top_labels, i) for i in data.index.to_list())
 
     for exp, i in exp_lst:
         for exp_list in exp.as_map().items():
@@ -86,7 +86,8 @@ def get_exp_anchor(data, explainer, precision=.95, model=None):
     for count, i in enumerate(data.index.to_list()):
         print(count, i)
         explanation = explainer.explain_instance(data.loc[i].values, model.predict, threshold=precision)
-        vars = list(map((lambda x: x.split()[0]), explanation.names()))
+        # vars = list(map((lambda x: x.split()[0]), explanation.names()))
+        vars = [i   for x in explanation.names() for i in  x.split() if i in data.columns.to_list()  ]
         print(explanation.names(), vars)
         explaination_df = explaination_df.append(pd.DataFrame(
             {"explainer_lib": [explainer_lib], "instance": [i], "features": [vars],
@@ -104,11 +105,12 @@ def get_exp_anchor_parallel(data, explainer, precision=.95, model=None):
         # print("i", i_)
         return e_, i_
 
-    exp_lst = Parallel(n_jobs=10)(delayed(inner_exp)(data.loc[i], model,  i) for i in data.index.to_list())
+    exp_lst = Parallel(n_jobs=7, max_nbytes=None)(delayed(inner_exp)(data.loc[i], model,  i) for i in data.index.to_list())
 
 
     for exp, i in exp_lst:
-        vars = list(map((lambda x: x.split()[0]), exp.names()))
+        # vars = list(map((lambda x: x.split()[0]), explanation.names()))
+        vars = [i for x in exp.names() for i in x.split() if i in data.columns.to_list()]
         print(exp.names(), vars)
         explaination_df = explaination_df.append(pd.DataFrame(
             {"explainer_lib": [explainer_lib], "instance": [i], "features": [vars],
