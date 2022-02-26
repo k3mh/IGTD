@@ -2,6 +2,7 @@
 # from __future__ import print_function
 import sys
 import os
+import gc
 sys.path.append(os.getcwd())
 import matplotlib
 #matplotlib.use('TkAgg')
@@ -61,7 +62,7 @@ def dataset_signals(count, dsts_lst, dsts_prop):
 
     return  generated_ds, metadata_df
 
-dataset_size= 1000
+dataset_size= 5000
 Dataframe_list = []
 accuracy_lst = []
 auc_list = []
@@ -131,14 +132,14 @@ if not load_final_result:
     datasets_seq_lst = [
     # [1, 3],
     # [1, 6, 11],
-    # [1, 2, 6, 9, 11],
-    # [1, 2, 3, 5, 6, 8, 9, 11],
-    # [3, 4, 6, 8],
-    # [1, 3, 6, 7, 8, 9, 11],
-    # [2, 3, 4, 5, 6, 9, 11],
-    # [1, 6, 7, 9, 10, 11],
-    # [2, 3, 4, 7, 10, 11],
-    # [2, 3, 5, 6, 7, 8, 9, 10],
+    [1, 2, 6, 9, 11],
+    [1, 2, 3, 5, 6, 8, 9, 11],
+    [3, 4, 6, 8],
+    [1, 3, 6, 7, 8, 9, 11],
+    [2, 3, 4, 5, 6, 9, 11],
+    [1, 6, 7, 9, 10, 11],
+    [2, 3, 4, 7, 10, 11],
+    [2, 3, 5, 6, 7, 8, 9, 10],
     [5, 6, 7]
                         ]
 
@@ -160,6 +161,7 @@ if not load_final_result:
 
     for iter_ in  range(len(datasets_seq_lst)):
         print("Dataset :{} out of {}".format(iter_, len(datasets_seq_lst)))
+        gc.collect()
         dsts_lst = datasets_seq_lst[iter_]
         dsts_prop = datasets_prop_lst[iter_]
         precision_lst1 = []
@@ -185,7 +187,7 @@ if not load_final_result:
         Dataframe_list.append(dataset)
 
         train, test, labels_train, labels_test = train_test_split(Dataframe_list[iter_][features_names],
-                                                              Dataframe_list[iter_][target_name], train_size=0.99, random_state= random_state, stratify=Dataframe_list[iter_][target_name])
+                                                              Dataframe_list[iter_][target_name], train_size=0.90, random_state= random_state, stratify=Dataframe_list[iter_][target_name])
 
         meta_train = metadata.loc[train.index]
         meta_test = metadata.loc[test.index]

@@ -84,11 +84,11 @@ def get_exp_anchor(data, explainer, precision=.95, model=None):
     explaination_df = pd.DataFrame(columns=["explainer_lib", "instance", "features", "importance"])
 
     for count, i in enumerate(data.index.to_list()):
-        print(count, i)
+        # print(count, i)
         explanation = explainer.explain_instance(data.loc[i].values, model.predict, threshold=precision)
         # vars = list(map((lambda x: x.split()[0]), explanation.names()))
         vars = [i   for x in explanation.names() for i in  x.split() if i in data.columns.to_list()  ]
-        print(explanation.names(), vars)
+        # print(explanation.names(), vars)
         explaination_df = explaination_df.append(pd.DataFrame(
             {"explainer_lib": [explainer_lib], "instance": [i], "features": [vars],
              "importance": [list(range(1, len(vars) + 1)) ] }))

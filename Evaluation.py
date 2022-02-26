@@ -63,13 +63,13 @@ def FPR(ds_meta, explanation, all_features):
 
 
         FPR.append(fp/ ground_truth_neg)
-
-        print("fp")
-        print(fp)
-        print("ground_truth_neg")
-        print(ground_truth_neg)
-        print("FPR")
-        print(FPR)
+        #
+        # print("fp")
+        # print(fp)
+        # print("ground_truth_neg")
+        # print(ground_truth_neg)
+        # print("FPR")
+        # print(FPR)
 
 
         # print("row=", row)
