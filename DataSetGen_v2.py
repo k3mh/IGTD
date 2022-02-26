@@ -6,6 +6,9 @@ import pandas as pd
 from sklearn.preprocessing import minmax_scale
 from sklearn.datasets import make_gaussian_quantiles, make_hastie_10_2, make_classification, make_friedman1,\
     make_friedman2, make_friedman3, make_blobs, make_moons
+import logging
+
+logger = logging.getLogger()
 
 class dataset:
     num_all_features = 47
@@ -71,7 +74,7 @@ class dataset:
 
         # That's it! Now let's take a look at the actual correlation:
         import scipy.stats as stats
-        print('corr=', stats.pearsonr(X, Y)[0])
+        logger.info("corr= {stats.pearsonr(X, Y)[0]}")
         return X, Y
 
     def __generate_cor_vars__lst(self, samples=1000, corr=0.9, num_vars=4):
@@ -86,8 +89,8 @@ class dataset:
         # That's it! Now let's take a look at the actual correlation:
         corr_ = np.corrcoef(data.T)
         np.fill_diagonal(corr_, 0)
-        print("shape:", corr_.shape)
-        print("max_ correlation ", corr_.max())
+        logger.info(f"shape:  {corr_.shape}")
+        logger.info(f"max_ correlation  {corr_.max()}")
         return data
 
     def generate_ds0(self, size=10000):

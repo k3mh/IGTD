@@ -3,6 +3,7 @@
 import sys
 import os
 import gc
+import logging
 sys.path.append(os.getcwd())
 import matplotlib
 #matplotlib.use('TkAgg')
@@ -26,6 +27,16 @@ import lime.lime_tabular
 from anchor import anchor_tabular
 from datetime import datetime
 from pathlib import Path
+
+import logging
+logging.basicConfig(format='%(asctime)s: %(module)s: %(message)s')
+
+# Creating an object
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+logger.info("=================================================================================")
+logger.info("====================================== Start ====================================")
 
 
 importlib.reload(dg)
@@ -57,7 +68,7 @@ def dataset_signals(count, dsts_lst, dsts_prop):
 
 
         #print(generated_ds.head())
-        print(ds.meta_data.shape)
+        logger.info(ds.meta_data.shape)
         features_names = ds.features_names
 
     return  generated_ds, metadata_df
@@ -160,7 +171,7 @@ if not load_final_result:
 
 
     for iter_ in  range(len(datasets_seq_lst)):
-        print("Dataset :{} out of {}".format(iter_, len(datasets_seq_lst)))
+        logger.info("Dataset :{} out of {}".format(iter_, len(datasets_seq_lst)))
         gc.collect()
         dsts_lst = datasets_seq_lst[iter_]
         dsts_prop = datasets_prop_lst[iter_]
@@ -200,8 +211,8 @@ if not load_final_result:
         rf.fit(train, labels_train)
         accuracy_lst.append(accuracy_score(labels_test, rf.predict(test)))
         auc_list.append(roc_auc_score(labels_test, rf.predict_proba(test)[:, 1]))
-        print("accuracy_list", np.round(accuracy_lst, 4))
-        print("auc_list     ", np.round(auc_list, 4))
+        logger.info(f"accuracy_list: {np.round(accuracy_lst, 4)}")
+        logger.info(f"auc_list     : {np.round(auc_list, 4)}")
 
         ########## explanations
         if not skip_explanations:
@@ -218,8 +229,8 @@ if not load_final_result:
                 explaination_lime = Explaination.get_exp_lime_paralell(test, lime_explainer, features_names, rf)
 
                 end = time.time()
-                print("Lime time elapsed")
-                print(end - start)
+                logger.info("Lime time elapsed")
+                logger.info(end - start)
                 #explaination_lime.to_pickle(lime_explanation_file)
 
 
@@ -244,8 +255,8 @@ if not load_final_result:
                 # explaination_anchor = Explaination.get_exp_anchor(test, anch_explainer, 0.8, rf)
 
                 end = time.time()
-                print("Anchor time elapsed")
-                print(end - start)
+                logger.info("Anchor time elapsed")
+                logger.info(end - start)
 
                 #explaination_anchor.to_pickle(anchor_explanation_file)
 
@@ -302,14 +313,14 @@ if not load_final_result:
                     {"dataset": [iter_ + 1], "metric": ["sensitivity"], "lib": ["lime"], "score": [sens_summ],
                      "score_list": [sens_df], "RGS": [meta_test.RGS.to_list()] })])
 
-                print(sens_summ)
+                logger.info(sens_summ)
                 sens_summ, sens_df = Evaluation.sensetivity(meta_test, explaination_anchor, 4)
                 #sens_lst2.append(sens_summ)
                 #temp_df =
                 results_df_iter = pd.concat([results_df_iter, pd.DataFrame(
                     {"dataset": [iter_ + 1], "metric": ["sensitivity"], "lib": ["anchor"], "score": [sens_summ],
                      "score_list": [sens_df], "RGS": [meta_test.RGS.to_list()] })])
-                print(sens_summ)
+                logger.info(sens_summ)
 
                 if save_iter_evaluation :
                     results_df_iter.to_pickle(parent_dir + "evaluation_" + str(iter_) + ".pkl")

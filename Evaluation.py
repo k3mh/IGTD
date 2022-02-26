@@ -1,5 +1,10 @@
 ### Evaluation
 import numpy as np
+import logging
+
+logger = logging.getLogger()
+
+
 def Recall(ds_meta, explanation, partial=False):
     RECL = 0
     tp = []
@@ -8,22 +13,22 @@ def Recall(ds_meta, explanation, partial=False):
         if ds_meta.shape[0] != explanation.shape[0]:
             raise ValueError
     except ValueError:
-        print("Explanations and metadata are not the same length")
+        logger.info("Explanations and metadata are not the same length")
 
 
     if partial:
         for row in ds_meta.index.to_list():
-            print("row=", row)
-            print(ds_meta.loc[row, "imp_vars"], explanation.set_index("instance").loc[row, "features"])
+            logger.info(f"row={row}")
+            logger.info(f'{ds_meta.loc[row, "imp_vars"]}, {explanation.set_index("instance").loc[row, "features"]}')
             intersection = len(set(ds_meta.loc[row, "imp_vars"]).intersection(set(explanation.set_index("instance").loc[row, "features"])))
             if intersection > 0:
                 tp.append(1)
-            print (tp)
+            logger.info (tp)
 
 
-        print("===============")
-        print(tp)
-        print(len(tp))
+        logger.info("===============")
+        logger.info(tp)
+        logger.info(len(tp))
         if len(tp) == 0 :
             RECL = 0
         else:
@@ -31,15 +36,15 @@ def Recall(ds_meta, explanation, partial=False):
 
     else:
         for row in ds_meta.index.to_list():
-            print("row=", row)
-            print(ds_meta.loc[row, "imp_vars"], explanation.set_index("instance").loc[row, "features"])
+            logger.info(f"row= {row}")
+            logger.info('{ds_meta.loc[row, "imp_vars"]}, {explanation.set_index("instance").loc[row, "features"]}')
 
             #length += len(ds_meta.loc[row, "imp_vars"])
             intersection = len(set(ds_meta.loc[row, "imp_vars"]).intersection(set(explanation.set_index("instance").loc[row, "features"])))
             ex_vars_num =  len(set(ds_meta.loc[row, "imp_vars"]))
             tp.append(intersection /ex_vars_num)
 
-            print(tp, length)
+            logger.info(f"tp={tp}, length={length}")
         RECL = np.sum(tp) / len(tp)
 
     return RECL, tp
@@ -51,7 +56,7 @@ def FPR(ds_meta, explanation, all_features):
         if ds_meta.shape[0] != explanation.shape[0]:
             raise ValueError
     except ValueError:
-        print("Explanations and metadata are not the same length")
+        logger.info("Explanations and metadata are not the same length")
 
     for row in ds_meta.index.to_list():
 
