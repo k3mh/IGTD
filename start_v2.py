@@ -208,9 +208,9 @@ if not load_final_result:
         rf = RandomForestClassifier()
         # rf = ExtraTreesClassifier()
         # rf = XGBClassifier()
-        rf.fit(train, labels_train)
-        accuracy_lst.append(accuracy_score(labels_test, rf.predict(test)))
-        auc_list.append(roc_auc_score(labels_test, rf.predict_proba(test)[:, 1]))
+        rf.fit(train.values, labels_train)
+        accuracy_lst.append(accuracy_score(labels_test, rf.predict(test.values)))
+        auc_list.append(roc_auc_score(labels_test, rf.predict_proba(test.values)[:, 1]))
         logger.info(f"accuracy_list: {np.round(accuracy_lst, 4)}")
         logger.info(f"auc_list     : {np.round(auc_list, 4)}")
 
