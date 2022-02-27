@@ -68,8 +68,8 @@ def get_exp_lime_paralell(data, explainer, feature_names,  model, num_feature=2,
         return e_, i_
 
 
-    exp_lst = Parallel(n_jobs=-5, max_nbytes=None, backend="multiprocessing")(delayed(inner_exp)(data.loc[i], model, num_feature, top_labels, i) for i in data.index.to_list())
-    #exp_lst = Parallel(n_jobs=-5)(delayed(inner_exp)(data.loc[i], model, num_feature, top_labels, i) for i in data.index.to_list())
+    # exp_lst = Parallel(n_jobs=-5, max_nbytes=None, backend="multiprocessing")(delayed(inner_exp)(data.loc[i], model, num_feature, top_labels, i) for i in data.index.to_list())
+    exp_lst = Parallel(n_jobs=-5)(delayed(inner_exp)(data.loc[i], model, num_feature, top_labels, i) for i in data.index.to_list())
 
 
     for exp, i in exp_lst:
