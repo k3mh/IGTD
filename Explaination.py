@@ -111,8 +111,8 @@ def get_exp_anchor_parallel(data, explainer, precision=.95, model=None):
         # print("i", i_)
         return e_, i_
 
-    exp_lst = Parallel(n_jobs=-5, max_nbytes=None, backend="multiprocessing")(delayed(inner_exp)(data.loc[i], model,  i) for i in data.index.to_list())
-    # exp_lst = Parallel(n_jobs=-5)(delayed(inner_exp)(data.loc[i], model,  i) for i in data.index.to_list())
+    # exp_lst = Parallel(n_jobs=-5, max_nbytes=None, backend="multiprocessing")(delayed(inner_exp)(data.loc[i], model,  i) for i in data.index.to_list())
+    exp_lst = Parallel(n_jobs=-5)(delayed(inner_exp)(data.loc[i], model,  i) for i in data.index.to_list())
 
 
     for exp, i in exp_lst:
