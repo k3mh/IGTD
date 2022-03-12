@@ -5,6 +5,7 @@ from pathlib import Path
 import itertools
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 # results = pd.read_pickle("results/results10000.plk")
 #
@@ -22,7 +23,8 @@ def plot_results (parent_dir):
     #parent_dir   = 'Dataset\\30Mar2020_21h09m33s\\'
 
     results_df   = pd.read_pickle(parent_dir + "evaluation_" + "all" + ".pkl")
-    results_dir  = parent_dir + '\\results'
+    #results_dir  = parent_dir + '\\results'
+    results_dir = os.path.join(parent_dir , 'results')
     Path(results_dir).mkdir(parents=True, exist_ok=True)
 
     context = ['recall_partial', 'recall', 'FPR', 'sensitivity']
@@ -42,7 +44,7 @@ def plot_results (parent_dir):
         #sns.swarmplot(data=sub_results_df, x='dataset', y='score_list', hue='lib', ax=ax)
 
         ax.set_title(con)
-        ax.figure.savefig(results_dir + '\\' + con + '.png')
+        ax.figure.savefig(os.path.join(results_dir , con + '.png'))
 
 def plot_dataset_signals(parent_dir):
     for i in Path(parent_dir).iterdir():

@@ -73,7 +73,7 @@ def dataset_signals(count, dsts_lst, dsts_prop):
 
     return  generated_ds, metadata_df
 
-dataset_size= 5000
+dataset_size= 10000
 Dataframe_list = []
 accuracy_lst = []
 auc_list = []
@@ -141,8 +141,8 @@ if not load_final_result:
 
     # selected based on 10s percentiles
     datasets_seq_lst = [
-    # [1, 3],
-    # [1, 6, 11],
+     [1, 3],
+     [1, 6, 11],
     [1, 2, 6, 9, 11],
     [1, 2, 3, 5, 6, 8, 9, 11],
     [3, 4, 6, 8],
@@ -171,7 +171,8 @@ if not load_final_result:
 
 
     for iter_ in  range(len(datasets_seq_lst)):
-        logger.info("Dataset :{} out of {}".format(iter_, len(datasets_seq_lst)))
+        logger.info("==================== Dataset start =======================")
+        logger.info("Dataset :{} out of {}".format(iter_+1, len(datasets_seq_lst)))
         gc.collect()
         dsts_lst = datasets_seq_lst[iter_]
         dsts_prop = datasets_prop_lst[iter_]
