@@ -111,33 +111,33 @@ Path(parent_dir).mkdir(parents=True, exist_ok=True)
 
 if not load_final_result:
 
-    datasets_seq_lst = [
+    #datasets_seq_lst = [
                          # [0],
-                         [1,1],
-                         [2],
-                         [3],
-                         [4],
-                         [5],
-                         [6],
-                         [7],
-                         [8],
-                         [9],
-                         [10],
-                         [11],
-                         [12,11],
+                  #       [1,1],
+                  #       [2],
+                  #       [3],
+                  #       [4],
+                  #       [5],
+                  #       [6],
+                  #       [7],
+                  #       [8],
+                  #       [9],
+                   #      [10],
+                   ##      [11],
+                   #      [12,11],
                          # [0],
                          # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-     ]
-    # datasets_seq_lst =                    list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 2))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 3))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 4))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 5))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 6))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 7))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 8))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 9))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 10))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 11))
+    # ]
+    datasets_seq_lst =                    list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 2))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 3))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 4))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 5))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 6))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 7))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 8))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 9))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 10))
+    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 11))
 
 
     # selected based on 10s percentiles
@@ -207,7 +207,7 @@ if not load_final_result:
 
 
         ## Training
-        rf = RandomForestClassifier()
+        rf = RandomForestClassifier(n_jobs=50)
         # rf = ExtraTreesClassifier()
         # rf = XGBClassifier()
         rf.fit(train.values, labels_train)
