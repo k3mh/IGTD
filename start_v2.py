@@ -85,20 +85,20 @@ random_state = 19
 load_datasets = False
 save_datasets = True
 
-skip_explanations = False
+skip_explanations = True
 load_explanations = False
-save_explanations = True
+save_explanations = False
 
-skip_iter_evaluation =False
+skip_iter_evaluation = True
 load_iter_evaluation = False
 save_iter_evaluation = False
 
 load_final_result = False
 save_final_result = True
 
-get_score = True
+get_score = False
 
-generate_plots = True
+generate_plots = False
 
 
 
@@ -112,47 +112,48 @@ Path(parent_dir).mkdir(parents=True, exist_ok=True)
 if not load_final_result:
 
     datasets_seq_lst = [
-
                          # [0],
-                         # [1],
-                         # [2],
-                         # [3],
-                         # [4],
-                         # [5],
-                         # [6],
-                         # [7],
-                         # [8],
-                         # [9],
-                         # [10],
-                         # [11],
+                         [1,1],
+                         [2],
+                         [3],
+                         [4],
+                         [5],
+                         [6],
+                         [7],
+                         [8],
+                         [9],
+                         [10],
+                         [11],
+                         [12,11],
                          # [0],
                          # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-
      ]
-    # datasets_seq_lst = list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 2))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 3))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 4))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 5))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 6))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 7))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 8))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 9))
-    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], 10))
+    # datasets_seq_lst =                    list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 2))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 3))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 4))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 5))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 6))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 7))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 8))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 9))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 10))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 11))
+
 
     # selected based on 10s percentiles
-    datasets_seq_lst = [
-     [1, 3],
-     [1, 6, 11],
-    [1, 2, 6, 9, 11],
-    [1, 2, 3, 5, 6, 8, 9, 11],
-    [3, 4, 6, 8],
-    [1, 3, 6, 7, 8, 9, 11],
-    [2, 3, 4, 5, 6, 9, 11],
-    [1, 6, 7, 9, 10, 11],
-    [2, 3, 4, 7, 10, 11],
-    [2, 3, 5, 6, 7, 8, 9, 10],
-    [5, 6, 7]
-                        ]
+    # datasets_seq_lst = [
+    #  [1, 3],
+    #  [1, 6, 11],
+    # [1, 2, 6, 9, 11],
+    # [1, 2, 3, 5, 6, 8, 9, 11],
+    # [3, 4, 6, 8],
+    # [1, 3, 6, 7, 8, 9, 11],
+    # [2, 3, 4, 5, 6, 9, 11],
+    # [1, 6, 7, 9, 10, 11],
+    # [2, 3, 4, 7, 10, 11],
+    # [2, 3, 5, 6, 7, 8, 9, 10],
+    # [5, 6, 7]
+    #                     ]
 
 
 
@@ -335,7 +336,7 @@ else:
 
 if save_final_result:
     results_df.to_pickle(parent_dir + "evaluation_" + "all" + ".pkl")
-    pd.DataFrame({"accuracy": accuracy_lst, "auc":auc_list}).to_csv(parent_dir + "model_performance.csv")
+    pd.DataFrame({"accuracy": accuracy_lst, "auc":auc_list, "datasets_list":datasets_seq_lst}).to_csv(parent_dir + "model_performance.csv")
 
 results_df_str = results_df.astype("str")
 if generate_plots:

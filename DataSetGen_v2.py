@@ -11,7 +11,7 @@ import logging
 logger = logging.getLogger()
 
 class dataset:
-    num_all_features = 47
+    num_all_features = 48
     features = ['x'+ str(i) for i in range(1, num_all_features + 1)]
 
     def __init__(self):
@@ -42,7 +42,7 @@ class dataset:
     def get_gen_fn_list(self):
         funs = [self.generate_ds0, self.generate_ds1, self.generate_ds2, self.generate_ds3, self.generate_ds4, self.generate_ds5,
                 self.generate_ds6, self.generate_ds7, self.generate_ds8, self.generate_ds9, self.generate_ds10,
-                self.generate_ds11]
+                self.generate_ds11, self.generate_ds12]
 
         return funs
 
@@ -387,8 +387,46 @@ class dataset:
         return self
 
     #
-
     def generate_ds9(self, size=10000):
+        #   Generate target correlated to two variable, target is true when both 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
+        #   All variables are strictly positive and continuous except x5 is categorical
+        # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
+
+        data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
+        df = pd.DataFrame(data, columns=dataset.features)
+
+        df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
+
+        df = df.astype(float)
+        temp_arr = make_friedman3(n_samples=size)
+        temp_pd = pd.DataFrame({"x1": temp_arr[0].transpose()[0], \
+                                "x2": temp_arr[0].transpose()[1], \
+                                "x3": temp_arr[0].transpose()[2], \
+                                "x4": temp_arr[0].transpose()[3], \
+                                "y_reg": temp_arr[1]})
+
+        med_point = temp_pd.y_reg.median()
+
+        temp_pd = temp_pd.assign(y=temp_pd[["y_reg"]].apply(lambda x: 1 if (x[0] > med_point) else 0, axis=1))
+
+        df.x33 = temp_pd.x1
+        df.x34 = temp_pd.x2
+        df.x35 = temp_pd.x3
+        df.x36 = temp_pd.x4
+
+        df = df.assign(y=temp_pd.y)
+
+        # df = df.assign(y=df[["x3", "x4", "x5"]].apply(lambda x: 1 if ( 5 * x[0] > 0.5 or (x[1] >= 0.5 and x[2] == 1) )else 0, axis=1))
+        # print(df.corr())
+        self.meta_data = pd.DataFrame(
+            {"imp_vars": [["x33", "x34", "x35", "x36"]] * df.shape[0], "RGS": ["RGS8"] * df.shape[0]})
+        self.data = df
+        features_names = df.columns.to_list()
+        features_names.remove('y')
+        self.features_names = features_names
+        return self
+
+    def generate_ds10(self, size=10000):
         """
         Based on sklearn.datasets.make_classification. Based on 4 features.
         This initially creates clusters of points normally distributed (std=1) about vertices of an
@@ -416,23 +454,23 @@ class dataset:
                                 "x4": temp_arr[0].transpose()[3], \
                                 "y": temp_arr[1]})
 
-        df.x33 = temp_pd.x1
-        df.x34 = temp_pd.x2
-        df.x35 = temp_pd.x3
-        df.x36 = temp_pd.x4
+        df.x37 = temp_pd.x1
+        df.x38 = temp_pd.x2
+        df.x39 = temp_pd.x3
+        df.x40 = temp_pd.x4
 
         df = df.assign(y=temp_pd.y)
         df.y.where(df.y == 1, 0, inplace=True)
 
         self.meta_data = pd.DataFrame(
-            {"imp_vars": [["x33", "x34", "x35", "x36"]] * df.shape[0], "RGS": ["RGS5"] * df.shape[0]})
+            {"imp_vars": [["x37", "x38", "x39", "x40"]] * df.shape[0], "RGS": ["RGS5"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
         self.features_names = features_names
         return self
 
-    def generate_ds10(self, size=10000):
+    def generate_ds11(self, size=10000):
         """
         sklearn.datasets.make_blobs(n_samples=100, n_features=2, *, centers=None, cluster_std=1.0,
          center_box=(- 10.0, 10.0), shuffle=True, random_state=None, return_centers=False)
@@ -453,17 +491,17 @@ class dataset:
                                 "x6": temp_arr[0].transpose()[5], \
                                 "y": temp_arr[1]})
 
-        df.x37 = temp_pd.x1
-        df.x38 = temp_pd.x2
-        df.x39 = temp_pd.x3
-        df.x40 = temp_pd.x4
-        df.x41 = temp_pd.x5
-        df.x42 = temp_pd.x6
+        df.x41 = temp_pd.x1
+        df.x42 = temp_pd.x2
+        df.x43 = temp_pd.x3
+        df.x44 = temp_pd.x4
+        df.x45 = temp_pd.x5
+        df.x46 = temp_pd.x6
         df = df.assign(y=temp_pd.y)
         # df.y.where(df.y == 1, 0, inplace=True)
 
         self.meta_data = pd.DataFrame(
-            {"imp_vars": [["x37", "x38", "x39", "x40", "41", "42"]] * df.shape[0], "RGS": ["RGS5"] * df.shape[0]})
+            {"imp_vars": [["x41", "x42", "x43", "x44", "45", "46"]] * df.shape[0], "RGS": ["RGS5"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
@@ -471,7 +509,7 @@ class dataset:
         return self
 
 
-    def generate_ds11(self, size=10000):
+    def generate_ds12(self, size=10000):
         """
         Make two interleaving half circles.
         A simple toy dataset to visualize clustering and classification algorithms. Read more in the User Guide.
@@ -487,14 +525,14 @@ class dataset:
                                 "x2": temp_arr[0].transpose()[1], \
                                 "y": temp_arr[1]})
 
-        df.x43 = temp_pd.x1
-        df.x44 = temp_pd.x2
+        df.x47 = temp_pd.x1
+        df.x48 = temp_pd.x2
 
         df = df.assign(y=temp_pd.y)
         # df.y.where(df.y == 1, 0, inplace=True)
 
         self.meta_data = pd.DataFrame(
-            {"imp_vars": [[ "x43", "x44"]] * df.shape[0], "RGS": ["RGS5"] * df.shape[0]})
+            {"imp_vars": [[ "x47", "x48"]] * df.shape[0], "RGS": ["RGS5"] * df.shape[0]})
         self.data = df
         features_names = df.columns.to_list()
         features_names.remove('y')
@@ -601,45 +639,7 @@ class dataset:
     #     return self
 
 
-# def generate_ds9(self, size=10000):
 
-    # #   Generate target correlated to two variable, target is true when both 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
-    #     #   All variables are strictly positive and continuous except x5 is categorical
-    #     # features = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12"]
-    #
-    #     data = self.__generate_cor_vars__lst(samples=size, corr=0, num_vars=len(dataset.features))
-    #     df = pd.DataFrame(data, columns=dataset.features)
-    #
-    #
-    #     df = pd.DataFrame(minmax_scale(df, axis=0, feature_range=(0, 1)), columns=dataset.features)
-    #
-    #     df = df.astype(float)
-    #     temp_arr = make_friedman3(n_samples=size)
-    #     temp_pd = pd.DataFrame({"x1": temp_arr[0].transpose()[0], \
-    #                             "x2": temp_arr[0].transpose()[1], \
-    #                             "x3": temp_arr[0].transpose()[2], \
-    #                             "x4": temp_arr[0].transpose()[3], \
-    #                             "y_reg": temp_arr[1]})
-    #
-    #     med_point = temp_pd.y_reg.median()
-    #
-    #     temp_pd = temp_pd.assign(y=temp_pd[["y_reg"]].apply(lambda x: 1 if (x[0] > med_point) else 0, axis=1))
-    #
-    #     df.x33 = temp_pd.x1
-    #     df.x34 = temp_pd.x2
-    #     df.x35 = temp_pd.x3
-    #     df.x36 = temp_pd.x4
-    #
-    #     df = df.assign(y=temp_pd.y)
-    #
-    #     # df = df.assign(y=df[["x3", "x4", "x5"]].apply(lambda x: 1 if ( 5 * x[0] > 0.5 or (x[1] >= 0.5 and x[2] == 1) )else 0, axis=1))
-    #     # print(df.corr())
-    #     self.meta_data = pd.DataFrame({"imp_vars": [["x33", "x34", "x35", "x36"]] * df.shape[0] , "RGS": ["RGS8"] * df.shape[0]})
-    #     self.data = df
-    #     features_names = df.columns.to_list()
-    #     features_names.remove('y')
-    #     self.features_names = features_names
-    #     return self
     # def generate_ds9(self, size=10000):
     #     #   Generate target correlated to two variable, target is true when both  x2^2 or 5*x3 or (x4 and x5) are above 0.5 and = 1 respectively .
     #     #   All variables are strictly positive and continuous except x5 is categorical

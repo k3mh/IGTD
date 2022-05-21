@@ -154,7 +154,7 @@ def get_IAT_score(lib, results_df, dataset_complexity_vector):
         print(IAT_score_temp)
     return IAT_score
 
-lime_IAT_score   = get_IAT_score(lib="lime", results_df=results_df, dataset_complexity_vector=list(range(1,12)))
-anchor_IAT_score =  get_IAT_score(lib="anchor", results_df=results_df, dataset_complexity_vector=list(range(1,12)))
-
-print(lime_IAT_score, anchor_IAT_score)
+# lime_IAT_score   = get_IAT_score(lib="lime", results_df=results_df, dataset_complexity_vector=list(range(1,12)))
+# anchor_IAT_score =  get_IAT_score(lib="anchor", results_df=results_df, dataset_complexity_vector=list(range(1,12)))
+#
+# print(lime_IAT_score, anchor_IAT_score)
