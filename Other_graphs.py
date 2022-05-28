@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import pandas as pd
 import importlib
+import numpy as np
 
 importlib.reload(px)
 
@@ -85,7 +86,7 @@ fig.show()
 
 
 """ Dataset combinations and selection"""
-dataset_comb_results = pd.read_csv("2035_dataset_comb_results_4Dec2021.csv")
+dataset_comb_results = pd.read_csv("4082_dataset_comb_results_21May2022.csv")
 dataset_comb_results.sort_values("accuracy", inplace=True, ascending=False)
 dataset_comb_results.drop(columns=["Unnamed: 0"], inplace=True)
 dataset_comb_results = dataset_comb_results.reset_index(drop=True).reset_index()
@@ -93,8 +94,8 @@ selected_inds=[]
 for i in [0, 10, 20 , 30 , 40 , 50 , 60 , 70 , 80 , 90 , 100]:
     selected_inds.append(dataset_comb_results.iloc[(dataset_comb_results.accuracy - np.percentile(
         dataset_comb_results.accuracy, i)).abs().argsort()[:1]].index.values[0])
-
-fig = px.scatter(data_frame=dataset_comb_results, x="index", y="accuracy" )
+dataset_comb_results = dataset_comb_results.rename(columns={"index":"Dataset Index", "accuracy":"Accuracy"})
+fig = px.scatter(data_frame=dataset_comb_results, x="Dataset Index", y="Accuracy" )
 fig.data[0].update(selectedpoints=selected_inds, selected=dict(marker=dict(color='purple', size=11)))
 
 fig.show()

@@ -85,9 +85,9 @@ random_state = 19
 load_datasets = False
 save_datasets = True
 
-skip_explanations = True
+skip_explanations = False
 load_explanations = False
-save_explanations = False
+save_explanations = True
 
 skip_iter_evaluation = True
 load_iter_evaluation = False
@@ -128,32 +128,32 @@ if not load_final_result:
                          # [0],
                          # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
     # ]
-    datasets_seq_lst =                    list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 2))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 3))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 4))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 5))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 6))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 7))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 8))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 9))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 10))
-    datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 11))
+    # datasets_seq_lst =                    list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 2))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 3))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 4))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 5))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 6))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 7))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 8))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 9))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 10))
+    # datasets_seq_lst = datasets_seq_lst + list(combinations([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 11))
 
 
     # selected based on 10s percentiles
-    # datasets_seq_lst = [
-    #  [1, 3],
-    #  [1, 6, 11],
-    # [1, 2, 6, 9, 11],
-    # [1, 2, 3, 5, 6, 8, 9, 11],
-    # [3, 4, 6, 8],
-    # [1, 3, 6, 7, 8, 9, 11],
-    # [2, 3, 4, 5, 6, 9, 11],
-    # [1, 6, 7, 9, 10, 11],
-    # [2, 3, 4, 7, 10, 11],
-    # [2, 3, 5, 6, 7, 8, 9, 10],
-    # [5, 6, 7]
-    #                     ]
+    datasets_seq_lst = [
+    [1, 3],
+    [3, 9, 10],
+    [1, 5, 6, 11, 12],
+    [1, 3, 7, 9],
+    [2, 3, 4, 5, 6, 8, 10, 12],
+    [2, 3, 5, 6, 8, 9, 10, 11],
+    [1, 2, 3, 5, 6, 8, 9, 10, 11, 12],
+    [1, 4, 5, 6, 7, 8, 10, 11, 12],
+    [2, 3, 4, 5, 7, 8, 10],
+    [4, 5, 6, 7, 8, 10, 11, 12],
+    [5, 6, 7, 9, 10]
+    ]
 
 
 
