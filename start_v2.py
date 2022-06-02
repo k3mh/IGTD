@@ -89,9 +89,9 @@ skip_explanations = False
 load_explanations = False
 save_explanations = True
 
-skip_iter_evaluation = True
+skip_iter_evaluation = False
 load_iter_evaluation = False
-save_iter_evaluation = False
+save_iter_evaluation = True
 
 load_final_result = False
 save_final_result = True
