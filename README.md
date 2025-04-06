@@ -1,4 +1,5 @@
-# Interpretability Ground Truth Datasets (IGTD)
+# Ground Truth Datasets Generation:
+
 - This repo aims at creating an interpretability ground truth datasets 
 - The datasets are created based on a combination of different features/label rules.
 - Each dataset contains multiple rules
